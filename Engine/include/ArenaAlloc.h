@@ -23,7 +23,7 @@ public:
 
         std::size_t space = incomingSize - offset;
         if (std::align(alignof(T), incomingSize, alignedPtr, space)) {
-            std::size_t padding = reinterpret_cast<uintptr_t>(alignedPtr)
+            const std::size_t padding = reinterpret_cast<uintptr_t>(alignedPtr)
             - reinterpret_cast<uintptr_t>(startPtr);
 
             offset  += padding + incomingSize;

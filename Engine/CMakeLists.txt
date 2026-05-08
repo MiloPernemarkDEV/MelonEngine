@@ -1,5 +1,7 @@
 add_library(Engine STATIC)
 
+# todo: add WindowSystem
+
 target_sources(Engine PRIVATE
         src/Engine.cpp
         src/ArenaAlloc.cpp

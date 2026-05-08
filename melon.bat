@@ -11,7 +11,6 @@ if "%1"=="check" goto check
 if "%1"=="run" goto run
 if "%1"=="clean" goto clean
 
-
 echo Usage:
 echo   melon build [rel]
 echo   melon check [rel]

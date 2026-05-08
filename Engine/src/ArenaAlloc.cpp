@@ -1,7 +1,7 @@
 #include "ArenaAlloc.h"
 #include "Debug.h"
 
-ArenaAlloc::ArenaAlloc(std::size_t size)
+ArenaAlloc::ArenaAlloc(const std::size_t size)
     : totalSize(size), offset(size)
 {
     try {

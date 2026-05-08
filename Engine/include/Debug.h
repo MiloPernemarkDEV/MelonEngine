@@ -17,6 +17,8 @@ constexpr const char* ASCI_BLUE_INFO = "\033[34m";
 
 class Debug {
 public:
+    Debug() = default;
+    ~Debug() = default;
     inline static void test_class() { std::cout << "Test Debug!\n";  };
     static auto Log(LogLevel logLevel, const char* msg) -> void;
 private:
