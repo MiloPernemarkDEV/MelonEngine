@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include "Debug.h"
+#include "ArenaAlloc.h"
 
 void EngineTest()
 {

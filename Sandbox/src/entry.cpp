@@ -1,8 +1,8 @@
-#include <iostream>
+#include "ArenaAlloc.h"
 
 int main() {
-    const auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+    ArenaAlloc globalMemory(100 * 1024 * 1024);
+
 
     return 0;
 }
