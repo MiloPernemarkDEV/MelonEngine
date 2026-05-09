@@ -1,6 +1,7 @@
 #ifndef MELONENGINE_WINDOWSYSTEM_H
 #define MELONENGINE_WINDOWSYSTEM_H
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 class WindowSystem {
@@ -13,9 +14,14 @@ public:
 
     WindowSystem(WindowSystem&&) noexcept = default;
 
-    void Init();
+    bool Init();
+    bool WindowShouldClose() const;
+    void SwapBuffers() const;
+    void PollForEvents() const;
     void Terminate();
 private:
+    auto setupGLContext() const -> void;
+    auto createWindowIcon(const char* filename) const -> void;
     GLFWwindow* window;
     const int WINDOW_X;
     const int WINDOW_Y;

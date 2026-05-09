@@ -6,6 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Vulkan REQUIRED)
 
-# Internal libraries
 add_subdirectory(Engine)
 add_subdirectory(Sandbox)
+add_subdirectory(Vendor)

@@ -2,10 +2,12 @@ add_library(Engine STATIC)
 
 # todo: add WindowSystem
 
+
 target_sources(Engine PRIVATE
-        src/Engine.cpp
         src/ArenaAlloc.cpp
         src/Debug.cpp
+        src/WindowSystem.cpp
+        src/ImageUtil.cpp
 )
 
 target_include_directories(Engine PUBLIC
@@ -20,5 +22,5 @@ target_link_directories(Engine PUBLIC
 target_link_libraries(Engine PUBLIC
         Vulkan::Vulkan
         glfw3
+        glad
 )
-

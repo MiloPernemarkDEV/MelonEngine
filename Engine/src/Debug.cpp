@@ -4,6 +4,10 @@
 
 #include "../include/Debug.h"
 
+
+#define MELON_ENABLE_LOGS
+
+#ifdef MELON_ENABLE_LOGS
 auto Debug::Log(const LogLevel logLevel, const char *msg) -> void {
     switch (logLevel)
     {
@@ -20,3 +24,8 @@ auto Debug::Log(const LogLevel logLevel, const char *msg) -> void {
             std::cout << msg << ASCI_RESET << "\n";
     }
 }
+#else
+auto Debug::Log(const LogLevel logLevel, const char *msg) -> void {
+
+}
+#endif
