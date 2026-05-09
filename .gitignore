@@ -75,14 +75,16 @@ Thumbs.db
 *.tmp
 
 # =========================================================
-# Node / Python (from template, harmless if unused)
+# Node / Python
 # =========================================================
 node_modules/
 __pycache__/
 *.pyc
 
 # =========================================================
-# Engine-specific (recommended for your project)
+# Engine-specific
 # =========================================================
 Sandbox/*.exe
 Engine/*.exe
+
+Vendor/assimp

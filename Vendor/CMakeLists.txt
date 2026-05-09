@@ -4,4 +4,5 @@ add_library(glad STATIC
 
 target_include_directories(glad PUBLIC
         include
+
 )

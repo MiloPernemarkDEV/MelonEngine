@@ -2,9 +2,8 @@
 #include "ImageUtil.h"
 
 WindowSystem::WindowSystem()
-    : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonEngine | OpenGL")
+    : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonLife | OpenGL")
 {
-
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
