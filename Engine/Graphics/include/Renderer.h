@@ -10,6 +10,7 @@ public:
     Renderer();
     ~Renderer();
     void BeginFrame();
+    void DrawFrame();
     void EndFrame();
 private:
 };

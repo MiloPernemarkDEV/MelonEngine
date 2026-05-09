@@ -8,6 +8,7 @@ target_sources(Engine PRIVATE
         src/Debug.cpp
         src/WindowSystem.cpp
         src/ImageUtil.cpp
+        src/AssetSystem.cpp
 )
 
 target_include_directories(Engine PUBLIC

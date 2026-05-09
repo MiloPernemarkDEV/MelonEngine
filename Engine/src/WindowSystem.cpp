@@ -56,5 +56,5 @@ auto WindowSystem::createWindowIcon(const char* filename) const -> void {
     images[0].pixels = data.pixels;
     images[0].width = data.x;
     images[0].height = data.y;
-    glfwSetWindowIcon(static_cast<GLFWwindow *>(window), 1, images);
+    glfwSetWindowIcon(window, 1, images);
 }
