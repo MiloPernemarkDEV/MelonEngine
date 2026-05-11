@@ -1,19 +1,18 @@
-//
-// Created by milos on 2026-05-08.
-//
-
 #ifndef MELONENGINE_RENDERER_H
 #define MELONENGINE_RENDERER_H
 
+#include "Device.h"
+#include <GLFW/glfw3.h>
+
 class Renderer {
 public:
-    Renderer();
-    ~Renderer();
-    void BeginFrame();
-    void DrawFrame();
-    void EndFrame();
+    explicit Renderer(GLFWwindow* window);
+    void Init();
+    void Terminate();
 private:
+    GLFWwindow* _window;
+    Device _device = nullptr;
+    bool isInitialized = false;
 };
-
 
 #endif //MELONENGINE_RENDERER_H

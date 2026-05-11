@@ -6,16 +6,18 @@
 #define MELONENGINE_APPLICATION_H
 
 #include "WindowSystem.h"
+#include "Renderer.h"
 #include "ArenaAlloc.h"
 
 class Application {
 public:
-    Application(ArenaAlloc* globalArena);
+    explicit Application(ArenaAlloc* globalArena);
 
-    bool Init() const;
+    bool Init();
     void Run() const;
     void Terminate() const;
 private:
+    Renderer* renderer = nullptr;
     ArenaAlloc* globalArena;
     WindowSystem* windowSystem;
 };

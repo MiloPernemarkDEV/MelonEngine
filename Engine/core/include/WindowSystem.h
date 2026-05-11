@@ -1,7 +1,7 @@
 #ifndef MELONENGINE_WINDOWSYSTEM_H
 #define MELONENGINE_WINDOWSYSTEM_H
 
-#include <glad/glad.h>
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 class WindowSystem {
@@ -19,10 +19,10 @@ public:
     void SwapBuffers() const;
     void PollForEvents() const;
     void Terminate();
-private:
-    auto setupGLContext() const -> void;
-    auto createWindowIcon(const char* filename) const -> void;
     GLFWwindow* window;
+private:
+    auto SetupContext() const -> void;
+    auto createWindowIcon(const char* filename) const -> void;
     const int WINDOW_X;
     const int WINDOW_Y;
     const char* APP_NAME;

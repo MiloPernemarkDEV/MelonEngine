@@ -9,16 +9,11 @@ WindowSystem::WindowSystem()
 // ReSharper disable once CppMemberFunctionMayBeConst
 bool WindowSystem::Init() {
     glfwInit();
-    setupGLContext();
+    SetupContext();
     window = glfwCreateWindow(WINDOW_X, WINDOW_Y, APP_NAME, nullptr, nullptr);
     createWindowIcon("Assets/Icons/melonengine.png");
 
     glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-        Debug::Log(LogLevel::ERROR, "Failed to initialize GLAD");
-        return false;
-    }
 
     if (!window) { return false; }
     return true;
@@ -41,11 +36,8 @@ void WindowSystem::Terminate() {
     glfwTerminate();
 }
 
-auto WindowSystem::setupGLContext() const -> void {
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+auto WindowSystem::SetupContext() const -> void {
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 }
 

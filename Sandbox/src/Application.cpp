@@ -6,8 +6,11 @@ Application::Application(ArenaAlloc* globalArena)
     windowSystem = globalArena->add<WindowSystem>();
 }
 
-bool Application::Init() const {
+bool Application::Init() {
     if (!windowSystem->Init()) { return false; }
+    
+    renderer = globalArena->add<Renderer>(windowSystem->window);
+    renderer->Init();
 
     return true;
 }
@@ -17,12 +20,11 @@ void Application::Run() const {
         windowSystem->PollForEvents();
 
 
-
-
         windowSystem->SwapBuffers();
     }
 }
 
 void Application::Terminate() const {
     windowSystem->Terminate();
+    renderer->Terminate();
 }
