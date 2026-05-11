@@ -1,5 +1,6 @@
 #include "WindowSystem.h"
 #include "ImageUtil.h"
+#include <filesystem>
 
 WindowSystem::WindowSystem()
     : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonLife | OpenGL")
@@ -7,7 +8,10 @@ WindowSystem::WindowSystem()
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
+// @Todo
+// refactor the current path from my own system path to an agnostic one
 bool WindowSystem::Init() {
+    std::filesystem::current_path("C:/msys64/home/milos/dev/C++/MelonEngine");
     glfwInit();
     SetupContext();
     window = glfwCreateWindow(WINDOW_X, WINDOW_Y, APP_NAME, nullptr, nullptr);

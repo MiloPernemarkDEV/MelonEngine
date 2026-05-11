@@ -18,7 +18,7 @@ public:
     void Terminate() const;
 private:
     Renderer* renderer = nullptr;
-    ArenaAlloc* globalArena;
+    ArenaAlloc* persistentArena;
     WindowSystem* windowSystem;
 };
 

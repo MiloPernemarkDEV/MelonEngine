@@ -5,8 +5,10 @@ Renderer::Renderer(GLFWwindow *window)
     : _window(window), _device(window) {
 }
 
-void Renderer::Init() {
+bool Renderer::Init() {
     _device.Init();
+
+    return true;
 }
 
 void Renderer::Terminate() {

@@ -1,16 +1,16 @@
 #include "Application.h"
 
 Application::Application(ArenaAlloc* globalArena)
-    : globalArena(globalArena)
+    : persistentArena(globalArena)
 {
     windowSystem = globalArena->add<WindowSystem>();
 }
 
 bool Application::Init() {
     if (!windowSystem->Init()) { return false; }
-    
-    renderer = globalArena->add<Renderer>(windowSystem->window);
-    renderer->Init();
+
+    renderer = persistentArena->add<Renderer>(windowSystem->window);
+    if (!renderer->Init()) { return false; }
 
     return true;
 }

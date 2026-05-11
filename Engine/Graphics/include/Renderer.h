@@ -7,7 +7,7 @@
 class Renderer {
 public:
     explicit Renderer(GLFWwindow* window);
-    void Init();
+    bool Init();
     void Terminate();
 private:
     GLFWwindow* _window;

@@ -6,6 +6,7 @@
 #include "RenderDefines.h"
 #include <VkBootstrap.h>
 
+
 Device::Device(GLFWwindow* window)
     : _window(window)
 {
@@ -52,6 +53,13 @@ void Device::Init() {
     _GPU = physicalDevice.physical_device;
 
     CreateSwapchain();
+
+    // some engines use 3 queues because they work in parallel
+    // in this case I only use the graphics queue which can take all cmds
+    _graphicsQueue = vkbDevice.get_queue(vkb::QueueType::graphics).value();
+    _graphicsQueueFamily = vkbDevice.get_queue_index(vkb::QueueType::graphics).value();
+
+    InitCommands();
 }
 
 void Device::CreateSwapchain() {
@@ -59,11 +67,10 @@ void Device::CreateSwapchain() {
 
     _swapchainImageFormat = VK_FORMAT_B8G8R8A8_UNORM;
 
-    // set_desired_swapchain_extent() is optional
     vkb::Swapchain vkbSwapchain = swapchainBuilder
     .set_desired_format(VkSurfaceFormatKHR{ .format = _swapchainImageFormat, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
-    .set_desired_present_mode(VK_PRESENT_MODE_FIFO_KHR)
-    .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+    .set_desired_present_mode(VK_PRESENT_MODE_FIFO_KHR) // cap the engines fps to the monitors refresh rate
+    .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT) // allow data to be copied onto the image
     .build()
     .value();
 
@@ -81,7 +88,42 @@ void Device::CleanupSwapchain() {
     }
 }
 
+// creates a command pool and a command buffer per frame overlap
+void Device::InitCommands() {
+
+    // check the Vulkan documentation on the command lifecycle
+    VkCommandPoolCreateInfo createInfo{
+        .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+        .queueFamilyIndex = _graphicsQueueFamily,
+    };
+
+    for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+        VK_CHECK(vkCreateCommandPool(_device, &createInfo, nullptr, &_frameData[i]._commandPool));
+        VkCommandBufferAllocateInfo commandAllocInfo{
+            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+            .pNext = nullptr,
+            .commandPool = _frameData[i]._commandPool,
+            .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+            .commandBufferCount = 1,
+        };
+        VK_CHECK(vkAllocateCommandBuffers(_device, &commandAllocInfo, &_frameData[i]._commandBuffer));
+    }
+}
+
+// When a command pool is destroyed all cmd buffers allocated from it are freed
+void Device::CleanupCommandPool() {
+    for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+        vkDestroyCommandPool(_device, _frameData[i]._commandPool, nullptr);
+    }
+}
+
+
 void Device::Cleanup() {
+    vkDeviceWaitIdle(_device);
+
+    CleanupCommandPool();
 
     CleanupSwapchain();
 
