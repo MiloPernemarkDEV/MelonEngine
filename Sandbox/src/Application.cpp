@@ -19,6 +19,7 @@ void Application::Run() const {
     while (!windowSystem->WindowShouldClose()) {
         windowSystem->PollForEvents();
 
+        renderer->Draw();
 
         windowSystem->SwapBuffers();
     }

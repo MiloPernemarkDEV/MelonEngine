@@ -7,12 +7,12 @@
 class Renderer {
 public:
     explicit Renderer(GLFWwindow* window);
+    void Draw();
     bool Init();
     void Terminate();
 private:
     GLFWwindow* _window;
     Device _device = nullptr;
-    bool isInitialized = false;
 };
 
 #endif //MELONENGINE_RENDERER_H

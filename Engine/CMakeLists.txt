@@ -3,7 +3,10 @@ add_library(Engine STATIC
         graphics/src/Renderer.cpp
         graphics/include/Device.h
         graphics/src/Device.cpp
-        graphics/include/RenderDefines.h)
+        graphics/include/RenderDefines.h
+        graphics/include/RendUtil.h
+        graphics/src/RendUtil.cpp
+)
 
 # todo: add WindowSystem
 

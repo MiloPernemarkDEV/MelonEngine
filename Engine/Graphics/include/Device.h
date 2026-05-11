@@ -8,6 +8,11 @@
 struct FrameData {
     VkCommandPool _commandPool;
     VkCommandBuffer _commandBuffer;
+
+    // Sync objects
+    VkSemaphore _swapchainSemaphore;
+    VkSemaphore _renderSemaphore;
+    VkFence _renderFence;
 };
 
 constexpr unsigned int FRAMES_IN_FLIGHT = 2;
@@ -19,11 +24,16 @@ public:
     void Cleanup();
     FrameData& GetCurrentFrame() { return _frameData[_frameNumber % FRAMES_IN_FLIGHT]; }
     void InitCommands();
+
+    VkDevice& GetDevice() { return _device; }
+    VkSwapchainKHR& GetSwapchain() { return _swapchain; }
+    std::vector<VkImage>& GetSwapchainImages() { return _swapchainImages; }
+    unsigned int& GetFrameNumber() { return _frameNumber; }
 private:
     GLFWwindow* _window;
     VkInstance _instance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
-    VkPhysicalDevice _GPU = VK_NULL_HANDLE;
+    VkPhysicalDevice GPU = VK_NULL_HANDLE;
     VkDevice _device = VK_NULL_HANDLE;
     VkSurfaceKHR _surface = VK_NULL_HANDLE;
 
@@ -40,6 +50,8 @@ private:
     void CreateSwapchain();
     void CleanupSwapchain();
     void CleanupCommandPool();
+    void InitSyncObjects();
+
 };
 
 #endif //MELONENGINE_DEVICE_H

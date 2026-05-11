@@ -1,8 +1,6 @@
 #include "Device.h"
-
 #include <iostream>
 #include <ostream>
-
 #include "RenderDefines.h"
 #include <VkBootstrap.h>
 
@@ -50,7 +48,7 @@ void Device::Init() {
     vkb::Device vkbDevice = deviceBuilder.build().value();
 
     _device = vkbDevice.device;
-    _GPU = physicalDevice.physical_device;
+    GPU = physicalDevice.physical_device;
 
     CreateSwapchain();
 
@@ -60,10 +58,11 @@ void Device::Init() {
     _graphicsQueueFamily = vkbDevice.get_queue_index(vkb::QueueType::graphics).value();
 
     InitCommands();
+    InitSyncObjects();
 }
 
 void Device::CreateSwapchain() {
-    vkb::SwapchainBuilder swapchainBuilder{ _GPU, _device, _surface };
+    vkb::SwapchainBuilder swapchainBuilder{ GPU, _device, _surface };
 
     _swapchainImageFormat = VK_FORMAT_B8G8R8A8_UNORM;
 
@@ -88,7 +87,8 @@ void Device::CleanupSwapchain() {
     }
 }
 
-// creates a command pool and a command buffer per frame overlap
+// creates a command pool and a command buffer per frame in flight
+// -so we always have one ready for the device
 void Device::InitCommands() {
 
     // check the Vulkan documentation on the command lifecycle
@@ -99,26 +99,46 @@ void Device::InitCommands() {
         .queueFamilyIndex = _graphicsQueueFamily,
     };
 
-    for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
-        VK_CHECK(vkCreateCommandPool(_device, &createInfo, nullptr, &_frameData[i]._commandPool));
+    for (auto & i : _frameData) {
+        VK_CHECK(vkCreateCommandPool(_device, &createInfo, nullptr, &i._commandPool));
         VkCommandBufferAllocateInfo commandAllocInfo{
             .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
             .pNext = nullptr,
-            .commandPool = _frameData[i]._commandPool,
+            .commandPool = i._commandPool,
             .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
             .commandBufferCount = 1,
         };
-        VK_CHECK(vkAllocateCommandBuffers(_device, &commandAllocInfo, &_frameData[i]._commandBuffer));
+        VK_CHECK(vkAllocateCommandBuffers(_device, &commandAllocInfo, &i._commandBuffer));
     }
 }
 
 // When a command pool is destroyed all cmd buffers allocated from it are freed
 void Device::CleanupCommandPool() {
-    for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
-        vkDestroyCommandPool(_device, _frameData[i]._commandPool, nullptr);
+    for (auto & i : _frameData) {
+        vkDestroyCommandPool(_device, i._commandPool, nullptr);
     }
 }
 
+void Device::InitSyncObjects() {
+    VkFenceCreateInfo fenceInfo{
+        .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = VK_FENCE_CREATE_SIGNALED_BIT
+    };
+
+    VkSemaphoreCreateInfo semaphoreInfo{
+        .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0
+    };
+
+    for (auto & i : _frameData) {
+        VK_CHECK(vkCreateFence(_device, &fenceInfo, nullptr, &i._renderFence));
+
+        VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._renderSemaphore));
+        VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._renderSemaphore));
+    }
+}
 
 void Device::Cleanup() {
     vkDeviceWaitIdle(_device);
@@ -132,4 +152,3 @@ void Device::Cleanup() {
     vkb::destroy_debug_utils_messenger(_instance, _debugMessenger);
     vkDestroyInstance(_instance, nullptr);
 }
-
