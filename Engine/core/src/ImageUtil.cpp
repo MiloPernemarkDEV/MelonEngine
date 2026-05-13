@@ -1,10 +1,7 @@
-//
-// Created by milos on 2026-05-09.
-//
-
-#include <ImageUtil.h>
+#include "pch.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#include <ImageUtil.h>
 
 auto ImageUtil::LoadIconData(Icon& icon, const char* filename) -> void {
     icon.data.filename = filename;

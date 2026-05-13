@@ -6,6 +6,7 @@ add_library(Engine STATIC
         graphics/include/RenderDefines.h
         graphics/include/RendUtil.h
         graphics/src/RendUtil.cpp
+        pch.h
 )
 
 # todo: add WindowSystem
@@ -39,5 +40,9 @@ target_link_libraries(Engine PUBLIC
         glad
         assimp-vc145-mt.lib
         vk-bootstrap::vk-bootstrap
+)
+
+target_precompile_headers(Engine PUBLIC
+        pch.h
 )
 

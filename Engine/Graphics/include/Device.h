@@ -29,6 +29,8 @@ public:
     VkSwapchainKHR& GetSwapchain() { return _swapchain; }
     std::vector<VkImage>& GetSwapchainImages() { return _swapchainImages; }
     unsigned int& GetFrameNumber() { return _frameNumber; }
+    VkQueue& GetGraphicsQueue() { return _graphicsQueue; }
+    void IncrementFrameNumber() { _frameNumber++; }
 private:
     GLFWwindow* _window;
     VkInstance _instance = VK_NULL_HANDLE;

@@ -1,8 +1,6 @@
 #ifndef MELONENGINE_DEBUG_H
 #define MELONENGINE_DEBUG_H
 
-#include <iostream>
-
 enum class LogLevel {
     WARNING,
     ERROR,
@@ -23,6 +21,5 @@ public:
     static auto Log(LogLevel logLevel, const char* msg) -> void;
 private:
 };
-
 
 #endif //MELONENGINE_DEBUG_H

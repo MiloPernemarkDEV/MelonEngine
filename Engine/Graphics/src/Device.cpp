@@ -1,8 +1,6 @@
+#include "pch.h"
 #include "Device.h"
-#include <iostream>
-#include <ostream>
 #include "RenderDefines.h"
-#include <VkBootstrap.h>
 
 
 Device::Device(GLFWwindow* window)
@@ -135,13 +133,21 @@ void Device::InitSyncObjects() {
     for (auto & i : _frameData) {
         VK_CHECK(vkCreateFence(_device, &fenceInfo, nullptr, &i._renderFence));
 
-        VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._renderSemaphore));
+        VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._swapchainSemaphore));
         VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._renderSemaphore));
     }
 }
 
 void Device::Cleanup() {
     vkDeviceWaitIdle(_device);
+
+    for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+
+        //destroy sync objects
+        vkDestroyFence(_device, _frameData[i]._renderFence, nullptr);
+        vkDestroySemaphore(_device, _frameData[i]._renderSemaphore, nullptr);
+        vkDestroySemaphore(_device ,_frameData[i]._swapchainSemaphore, nullptr);
+    }
 
     CleanupCommandPool();
 

@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "WindowSystem.h"
 #include "ImageUtil.h"
-#include <filesystem>
 
 WindowSystem::WindowSystem()
     : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonLife | OpenGL")

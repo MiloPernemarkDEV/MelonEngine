@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "RendUtil.h"
 
 VkImageSubresourceRange rutil::ImageSubresourceRange(VkImageAspectFlags aspectMask)
@@ -47,3 +48,57 @@ void rutil::TransitionImage(VkCommandBuffer cmd, VkImage image, VkImageLayout cu
 
     vkCmdPipelineBarrier2(cmd, &depInfo);
 }
+
+VkCommandBufferBeginInfo rutil::CommandBufferBeginInfo(VkCommandBufferUsageFlags flags) {
+   VkCommandBufferBeginInfo info {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .pNext = nullptr,
+        .flags = flags,
+   };
+    return info;
+}
+
+VkSemaphoreSubmitInfo rutil::SemaphoreSubmitInfo(VkPipelineStageFlags2 stageMask, VkSemaphore semaphore) {
+    VkSemaphoreSubmitInfo info {
+        .sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+        .pNext = nullptr,
+        .semaphore = semaphore,
+        .value = 0,
+        .stageMask = stageMask,
+        .deviceIndex = 0
+    };
+    return info;
+}
+
+VkCommandBufferSubmitInfo rutil::CommandBufferSubmitInfo(VkCommandBuffer cmd) {
+    VkCommandBufferSubmitInfo info {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
+        .pNext = nullptr,
+        .commandBuffer = cmd,
+        .deviceMask = 0
+    };
+    return info;
+}
+
+VkSubmitInfo2 rutil::SubmitInfo(VkCommandBufferSubmitInfo *cmd, VkSemaphoreSubmitInfo *signalSemaphoreInfo,
+    VkSemaphoreSubmitInfo *waitSemaphoreInfo) {
+
+    VkSubmitInfo2 info = {};
+    info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2;
+    info.pNext = nullptr;
+
+    info.waitSemaphoreInfoCount = waitSemaphoreInfo == nullptr ? 0 : 1;
+    info.pWaitSemaphoreInfos = waitSemaphoreInfo;
+
+    info.signalSemaphoreInfoCount = signalSemaphoreInfo == nullptr ? 0 : 1;
+    info.pSignalSemaphoreInfos = signalSemaphoreInfo;
+
+    info.commandBufferInfoCount = 1;
+    info.pCommandBufferInfos = cmd;
+
+    return info;
+}
+
+
+
+

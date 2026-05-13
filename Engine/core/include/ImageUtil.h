@@ -1,7 +1,3 @@
-//
-// Created by milos on 2026-05-09.
-//
-
 #ifndef MELONENGINE_IMAGEUTIL_H
 #define MELONENGINE_IMAGEUTIL_H
 
