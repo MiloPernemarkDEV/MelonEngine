@@ -4,16 +4,9 @@
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include <vector>
+#include "VulkanTypes.h"
 
-struct FrameData {
-    VkCommandPool _commandPool;
-    VkCommandBuffer _commandBuffer;
-
-    // Sync objects
-    VkSemaphore _swapchainSemaphore;
-    VkSemaphore _renderSemaphore;
-    VkFence _renderFence;
-};
+#include <vk_mem_alloc.h>
 
 constexpr unsigned int FRAMES_IN_FLIGHT = 2;
 
@@ -25,17 +18,22 @@ public:
     FrameData& GetCurrentFrame() { return _frameData[_frameNumber % FRAMES_IN_FLIGHT]; }
     void InitCommands();
 
+    VkInstance& GetInstance() { return _instance; }
     VkDevice& GetDevice() { return _device; }
     VkSwapchainKHR& GetSwapchain() { return _swapchain; }
     std::vector<VkImage>& GetSwapchainImages() { return _swapchainImages; }
     unsigned int& GetFrameNumber() { return _frameNumber; }
     VkQueue& GetGraphicsQueue() { return _graphicsQueue; }
     void IncrementFrameNumber() { _frameNumber++; }
+
+    DeleteQueue _mainDeletionQueue;
+    VmaAllocator _allocator;
+    AllocatedImage& GetDrawImage() { return _drawImage; }
 private:
     GLFWwindow* _window;
     VkInstance _instance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
-    VkPhysicalDevice GPU = VK_NULL_HANDLE;
+    VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
     VkDevice _device = VK_NULL_HANDLE;
     VkSurfaceKHR _surface = VK_NULL_HANDLE;
 
@@ -49,11 +47,13 @@ private:
     uint32_t _graphicsQueueFamily = 0;
     unsigned int _frameNumber = 0;
 
-    void CreateSwapchain();
+    AllocatedImage _drawImage;
+    VkExtent2D _drawExtent;
+
+    void InitSwapchain();
     void CleanupSwapchain();
     void CleanupCommandPool();
     void InitSyncObjects();
-
 };
 
 #endif //MELONENGINE_DEVICE_H

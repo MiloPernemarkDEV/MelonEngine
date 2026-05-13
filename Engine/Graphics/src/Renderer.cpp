@@ -3,7 +3,6 @@
 #include "RenderDefines.h"
 #include "RendUtil.h"
 
-
 Renderer::Renderer(GLFWwindow *window)
     : _window(window), _device(window) {
 }
@@ -19,6 +18,10 @@ void Renderer::Draw()
         true,
         1000000000
     ));
+
+    _device.GetCurrentFrame()._deletionQueue.Flush();
+
+
 
     VK_CHECK(vkResetFences(
         _device.GetDevice(),
@@ -48,30 +51,15 @@ void Renderer::Draw()
 
     VK_CHECK(vkBeginCommandBuffer(cmd, &beginInfo));
 
+    // validation error that it's it undefined state because I'm just clearing, will stop later when stuff gets rendered
     rutil::TransitionImage(
         cmd,
         _device.GetSwapchainImages()[swapchainImageIndex],
-        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+        VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_GENERAL
     );
 
-    VkClearColorValue clearValue;
-    float flash = std::abs(std::sin(
-        static_cast<float>(_device.GetFrameNumber()) / 120.f));
-
-    clearValue = {{0.0f, 0.0f, flash, 1.0f}};
-
-    VkImageSubresourceRange clearRange =
-        rutil::ImageSubresourceRange(VK_IMAGE_ASPECT_COLOR_BIT);
-
-    vkCmdClearColorImage(
-        cmd,
-        _device.GetSwapchainImages()[swapchainImageIndex],
-        VK_IMAGE_LAYOUT_GENERAL,
-        &clearValue,
-        1,
-        &clearRange
-    );
+    DrawBackground(cmd);
 
     rutil::TransitionImage(
         cmd,
@@ -82,23 +70,19 @@ void Renderer::Draw()
 
     VK_CHECK(vkEndCommandBuffer(cmd));
 
-    VkCommandBufferSubmitInfo cmdInfo =
-        rutil::CommandBufferSubmitInfo(cmd);
+    VkCommandBufferSubmitInfo cmdInfo = rutil::CommandBufferSubmitInfo(cmd);
 
-    VkSemaphoreSubmitInfo waitInfo =
-        rutil::SemaphoreSubmitInfo(
-            VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-            frame._swapchainSemaphore
-        );
+    VkSemaphoreSubmitInfo waitInfo = rutil::SemaphoreSubmitInfo(
+        VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+        frame._swapchainSemaphore
+    );
 
-    VkSemaphoreSubmitInfo signalInfo =
-        rutil::SemaphoreSubmitInfo(
-            VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
-            frame._renderSemaphore
-        );
+    VkSemaphoreSubmitInfo signalInfo = rutil::SemaphoreSubmitInfo(
+        VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+        frame._renderSemaphore
+    );
 
-    VkSubmitInfo2 submit =
-        rutil::SubmitInfo(&cmdInfo, &signalInfo, &waitInfo);
+    VkSubmitInfo2 submit = rutil::SubmitInfo(&cmdInfo, &signalInfo, &waitInfo);
 
     VK_CHECK(vkQueueSubmit2(
         _device.GetGraphicsQueue(),
@@ -132,4 +116,25 @@ bool Renderer::Init() {
 
 void Renderer::Terminate() {
     _device.Cleanup();
+    _device._mainDeletionQueue.Flush();
+}
+
+void Renderer::DrawBackground(VkCommandBuffer cmd) {
+    float flash = std::abs(std::sin(
+        static_cast<float>(_device.GetFrameNumber()) / 120.f));
+
+    VkClearColorValue clearValue;
+    clearValue = {{0.0f, 0.0f, flash, 1.0f}};
+
+    VkImageSubresourceRange clearRange =
+        rutil::ImageSubresourceRange(VK_IMAGE_ASPECT_COLOR_BIT);
+
+    vkCmdClearColorImage(
+        cmd,
+        _device.GetDrawImage().image,
+        VK_IMAGE_LAYOUT_GENERAL,
+        &clearValue,
+        1,
+        &clearRange
+    );
 }

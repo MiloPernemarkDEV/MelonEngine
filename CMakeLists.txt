@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Vulkan REQUIRED)
 
+#### DEPENDENCY FETCHING ####
 include(FetchContent)
 
 FetchContent_Declare(
@@ -14,6 +15,15 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(vk_bootstrap)
+
+FetchContent_Declare(
+        VMA
+        GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+        GIT_TAG v3.1.0
+)
+
+FetchContent_MakeAvailable(VMA)
+#### DEPENDENCY FETCHING END ####
 
 add_subdirectory(Vendor)
 add_subdirectory(Engine)

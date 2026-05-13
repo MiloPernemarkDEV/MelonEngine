@@ -11,6 +11,7 @@ public:
     bool Init();
     void Terminate();
 private:
+    void DrawBackground(VkCommandBuffer cmd);
     GLFWwindow* _window;
     Device _device = nullptr;
 };

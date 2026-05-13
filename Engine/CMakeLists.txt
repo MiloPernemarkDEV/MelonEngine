@@ -7,6 +7,7 @@ add_library(Engine STATIC
         graphics/include/RendUtil.h
         graphics/src/RendUtil.cpp
         pch.h
+        graphics/include/VulkanTypes.h
 )
 
 # todo: add WindowSystem
@@ -28,6 +29,7 @@ target_include_directories(Engine PUBLIC
         ${CMAKE_SOURCE_DIR}/Engine
         ${CMAKE_SOURCE_DIR}/Vendor/include
         ${CMAKE_SOURCE_DIR}/Vendor/assimp/include
+        ${vma_SOURCE_DIR}/include
 )
 
 target_link_directories(Engine PUBLIC

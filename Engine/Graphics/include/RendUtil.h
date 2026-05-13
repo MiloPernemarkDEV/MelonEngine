@@ -2,10 +2,15 @@
 #define MELONENGINE_RENDUTIL_H
 
 #include <vulkan\vulkan.h>
-namespace rutil {
-    VkImageSubresourceRange ImageSubresourceRange(VkImageAspectFlags aspectMask);
+#include <Device.h>
 
+namespace rutil {
+    // Images
+    VkImageSubresourceRange ImageSubresourceRange(VkImageAspectFlags aspectMask);
     void TransitionImage(VkCommandBuffer cmdBuffer, VkImage image, VkImageLayout currentLayout, VkImageLayout newLayout);
+    VkImageCreateInfo ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent);
+    VkImageViewCreateInfo ImageViewCreateInfo(VkFormat format, VkImage image, VkImageAspectFlags aspectFlags);
+    void CopyToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize, VkExtent2D dstSize);
 
     VkCommandBufferBeginInfo CommandBufferBeginInfo(VkCommandBufferUsageFlags flags);
 
@@ -16,6 +21,7 @@ namespace rutil {
     VkSubmitInfo2 SubmitInfo(VkCommandBufferSubmitInfo* cmd, VkSemaphoreSubmitInfo* signalSemaphoreInfo,
 
     VkSemaphoreSubmitInfo* waitSemaphoreInfo);
+
 }
 
 
