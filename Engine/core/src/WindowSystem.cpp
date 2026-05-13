@@ -3,13 +3,12 @@
 #include "ImageUtil.h"
 
 WindowSystem::WindowSystem()
-    : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonLife | OpenGL")
+    : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonEngine | Vulkan 1.3.1")
 {
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-// @Todo
-// refactor the current path from my own system path to an agnostic one
+// @Todo refactor path from hardcoding my own path
 bool WindowSystem::Init() {
     std::filesystem::current_path("C:/msys64/home/milos/dev/C++/MelonEngine");
     glfwInit();

@@ -29,6 +29,9 @@ public:
     DeleteQueue _mainDeletionQueue;
     VmaAllocator _allocator;
     AllocatedImage& GetDrawImage() { return _drawImage; }
+    AllocatedImage _drawImage;
+    VkExtent2D _drawExtent;
+    VkExtent2D  _swapchainExtent;
 private:
     GLFWwindow* _window;
     VkInstance _instance = VK_NULL_HANDLE;
@@ -46,9 +49,6 @@ private:
     VkQueue _graphicsQueue = VK_NULL_HANDLE;
     uint32_t _graphicsQueueFamily = 0;
     unsigned int _frameNumber = 0;
-
-    AllocatedImage _drawImage;
-    VkExtent2D _drawExtent;
 
     void InitSwapchain();
     void CleanupSwapchain();

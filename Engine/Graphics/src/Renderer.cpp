@@ -21,8 +21,6 @@ void Renderer::Draw()
 
     _device.GetCurrentFrame()._deletionQueue.Flush();
 
-
-
     VK_CHECK(vkResetFences(
         _device.GetDevice(),
         1,
@@ -51,22 +49,19 @@ void Renderer::Draw()
 
     VK_CHECK(vkBeginCommandBuffer(cmd, &beginInfo));
 
-    // validation error that it's it undefined state because I'm just clearing, will stop later when stuff gets rendered
-    rutil::TransitionImage(
-        cmd,
-        _device.GetSwapchainImages()[swapchainImageIndex],
-        VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_GENERAL
-    );
+    if (_device.GetFrameNumber() == 0) {
+        rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+    }
 
     DrawBackground(cmd);
 
-    rutil::TransitionImage(
-        cmd,
-        _device.GetSwapchainImages()[swapchainImageIndex],
-        VK_IMAGE_LAYOUT_GENERAL,
-        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
-    );
+    rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+    rutil::TransitionImage(cmd, _device.GetSwapchainImages()[swapchainImageIndex], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+    rutil::CopyImageToImage(cmd, _device._drawImage.image, _device.GetSwapchainImages()[swapchainImageIndex], _device._drawExtent, _device._swapchainExtent);
+
+    rutil::TransitionImage(cmd, _device.GetSwapchainImages()[swapchainImageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+    rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL);
 
     VK_CHECK(vkEndCommandBuffer(cmd));
 
@@ -110,13 +105,16 @@ void Renderer::Draw()
 
 bool Renderer::Init() {
     _device.Init();
+    assert(_device._drawExtent.width > 0);
+    assert(_device._drawExtent.height > 0);
+    assert(_device._swapchainExtent.width > 0);
+    assert(_device._swapchainExtent.height > 0);
 
     return true;
 }
 
 void Renderer::Terminate() {
     _device.Cleanup();
-    _device._mainDeletionQueue.Flush();
 }
 
 void Renderer::DrawBackground(VkCommandBuffer cmd) {

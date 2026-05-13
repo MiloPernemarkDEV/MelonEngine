@@ -51,6 +51,16 @@ void Device::Init() {
     _device = vkbDevice.device;
     _physicalDevice = physicalDevice.physical_device;
 
+    // the flag allows shaders to access buffers via GPU addresses, aka GPU pointers.
+    VmaAllocatorCreateInfo allocatorInfo = {
+        .flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT,
+        .physicalDevice = _physicalDevice,
+        .device = _device,
+        .instance = _instance,
+    };
+
+    VK_CHECK(vmaCreateAllocator(&allocatorInfo, &_allocator));
+
     InitSwapchain();
 
     // some engines use 3 queues because they work in parallel
@@ -61,18 +71,7 @@ void Device::Init() {
     InitCommands();
     InitSyncObjects();
 
-    // the flag allows shaders to access buffers via GPU addresses, aka GPU pointers.
-    VmaAllocatorCreateInfo allocatorInfo = {
-        .flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT,
-        .physicalDevice = _physicalDevice,
-        .device = _device,
-        .instance = _instance,
-    };
-
-    vmaCreateAllocator(&allocatorInfo, &_allocator);
     _mainDeletionQueue.PushFunction([&]() {vmaDestroyAllocator(_allocator);} );
-
-
 }
 
 void Device::InitSwapchain() {
@@ -91,24 +90,22 @@ void Device::InitSwapchain() {
     _swapchainImages = vkbSwapchain.get_images().value();
     _swapchainImageViews = vkbSwapchain.get_image_views().value();
     _swapchainImageFormat = vkbSwapchain.image_format;
-
-    int extentWidth{};
-    int extentHeight{};
-    glfwGetFramebufferSize(_window, &extentWidth, &extentHeight);
+    _swapchainExtent = vkbSwapchain.extent;
 
     VkExtent3D drawImageExtent = {
-        .width = static_cast<uint32_t>(extentWidth),
-        .height = static_cast<uint32_t>(extentHeight),
+        .width = _swapchainExtent.width,
+        .height = _swapchainExtent.height,
         .depth = 1
     };
 
     _drawImage.imageFormat = VK_FORMAT_R16G16B16A16_SFLOAT;
     _drawImage.imageExtent = drawImageExtent;
+    _drawExtent = _swapchainExtent;
 
-    VkImageUsageFlags drawImageUsageFlags{};
-    drawImageUsageFlags != VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-    drawImageUsageFlags != VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-    drawImageUsageFlags != VK_IMAGE_USAGE_STORAGE_BIT;
+    VkImageUsageFlags drawImageUsageFlags = 0;
+    drawImageUsageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    drawImageUsageFlags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    drawImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
     drawImageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
     VkImageCreateInfo rimgInfo = rutil::ImageCreateInfo(_drawImage.imageFormat, drawImageUsageFlags, drawImageExtent);
@@ -116,7 +113,7 @@ void Device::InitSwapchain() {
     VmaAllocationCreateInfo rimgAllocInfo{};
     rimgAllocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
     rimgAllocInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-    vmaCreateImage(_allocator, &rimgInfo, &rimgAllocInfo, &_drawImage.image, &_drawImage.allocation, nullptr);
+    VK_CHECK(vmaCreateImage(_allocator, &rimgInfo, &rimgAllocInfo, &_drawImage.image, &_drawImage.allocation, nullptr));
 
     VkImageViewCreateInfo rViewInfo = rutil::ImageViewCreateInfo(_drawImage.imageFormat, _drawImage.image, VK_IMAGE_ASPECT_COLOR_BIT);
 
@@ -205,6 +202,7 @@ void Device::Cleanup() {
     CleanupCommandPool();
 
     CleanupSwapchain();
+    _mainDeletionQueue.Flush();
 
     vkDestroyDevice(_device, nullptr);
     vkDestroySurfaceKHR(_instance, _surface, nullptr);

@@ -83,7 +83,7 @@ VkImageViewCreateInfo rutil::ImageViewCreateInfo(VkFormat format, VkImage image,
     return info;
 }
 
-void rutil::CopyToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize,
+void rutil::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize,
     VkExtent2D dstSize) {
     VkImageBlit2 blitRegion{ .sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = nullptr };
     blitRegion.srcOffsets[1].x = static_cast<int32_t>(srcSize.width);
