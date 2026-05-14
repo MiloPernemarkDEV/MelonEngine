@@ -1,6 +1,7 @@
 #include "Application.h"
 #include <chrono>
 #include <thread>
+#include "MelonImGui.h"
 
 Application::Application(ArenaAlloc* globalArena)
     : persistentArena(globalArena)
@@ -29,7 +30,7 @@ void Application::Run() const {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::ShowDemoWindow();
+        renderer->DrawDebugUI();
 
         ImGui::Render();
 

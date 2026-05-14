@@ -5,7 +5,9 @@
 #include <GLFW/glfw3.h>
 #include "Descriptors.h"
 #include "Pipelines.h"
-#include "MelonImgui.h"
+#include "MelonImGui.h"
+#include "VulkanTypes.h"
+#include <vector>
 
 class Renderer {
 public:
@@ -13,13 +15,14 @@ public:
     void Draw();
     bool Init();
     void Terminate();
+    void DrawDebugUI();
 private:
     void DrawBackground(VkCommandBuffer cmd);
     GLFWwindow* _window;
     Device _device;
     Descriptors _descriptors;
     Pipelines _pipelines;
-    MelonImgui _melonImgui;
+    MelonImGui _melonImgui;
 };
 
 #endif //MELONENGINE_RENDERER_H

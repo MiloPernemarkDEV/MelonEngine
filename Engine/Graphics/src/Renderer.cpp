@@ -2,13 +2,14 @@
 #include "Renderer.h"
 #include "RenderDefines.h"
 #include "RendUtil.h"
+#include "math/Vec4f.h"
 
 Renderer::Renderer(GLFWwindow* window)
     : _window(window),
       _device(window),
       _descriptors(&_device),
       _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device.GetDevice()),
-      _melonImgui(&_device, window)
+      _melonImgui(&_device, window, &_pipelines)
 {
 
 }
@@ -128,8 +129,14 @@ void Renderer::Terminate() {
     _device.Cleanup();
 }
 
+void Renderer::DrawDebugUI() {
+    _melonImgui.DrawDebugUI();
+}
+
 void Renderer::DrawBackground(VkCommandBuffer cmd) {
-    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, _pipelines._gradientPipeline);
+    ComputeEffect& effect = _pipelines.GetBackgroundEffects()[_pipelines.GetCurrentBackgroundEffect()];
+
+    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, effect.pipeline);
     vkCmdBindDescriptorSets(
         cmd,
         VK_PIPELINE_BIND_POINT_COMPUTE,
@@ -140,6 +147,8 @@ void Renderer::DrawBackground(VkCommandBuffer cmd) {
         0,
         nullptr
     );
+
+    vkCmdPushConstants(cmd, _pipelines._gradientPipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(ComputePushConstants), &effect.data);
 
     vkCmdDispatch(
         cmd,

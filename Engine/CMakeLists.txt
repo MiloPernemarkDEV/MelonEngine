@@ -33,7 +33,7 @@ add_library(Engine STATIC
         graphics/include/VulkanTypes.h
         graphics/include/Descriptors.h
         graphics/include/Pipelines.h
-        graphics/include/melonImgui.h
+        graphics/include/MelonImgui.h
         graphics/src/MelonImgui.cpp
 )
 

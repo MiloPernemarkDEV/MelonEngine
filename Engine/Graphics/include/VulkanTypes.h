@@ -6,6 +6,7 @@
 #include <deque>
 #include <functional>
 #include <span>
+#include "math/Vec4f.h"
 
 struct DeleteQueue {
     std::deque<std::function<void()>> deletors;
@@ -46,6 +47,20 @@ struct MelonImguiObjects {
     VkFence _immFence = VK_NULL_HANDLE;
     VkCommandBuffer _immCommandBuffer = VK_NULL_HANDLE;
     VkCommandPool _immCommandPool = VK_NULL_HANDLE;
+};
+
+struct ComputePushConstants {
+    Vec4f data1;
+    Vec4f data2;
+    Vec4f data3;
+    Vec4f data4;
+};
+
+struct ComputeEffect {
+    const char* name = nullptr;
+    VkPipeline pipeline = VK_NULL_HANDLE;
+    VkPipelineLayout layout = VK_NULL_HANDLE;
+    ComputePushConstants data;
 };
 
 #endif //MELONENGINE_VULKANTYPES_H

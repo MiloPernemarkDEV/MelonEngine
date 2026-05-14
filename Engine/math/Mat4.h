@@ -94,14 +94,14 @@ struct Mat4 {
 
 	// Classical adjoint matrix inverse
 	MELON_INLINE Mat4 inverse() {
-		MELON_ASSERT(isInvertable(*this), "Tried to inverse singular matrix");
+		MELON_ASSERT(isInvertible(*this), "Tried to inverse singular matrix");
 
 
 
 	}
 
 	MELON_INLINE static Mat4 inverse(Mat4& m) {
-		RT_ASSERT(isInvertable(m), "Tried to inverse singular matrix");
+		MELON_ASSERT(isInvertible(m), "Tried to inverse singular matrix");
 	}
 
 	MELON_INLINE Mat4 operator*(const float s) const noexcept
