@@ -21,6 +21,9 @@ namespace rutil {
     VkSemaphoreSubmitInfo* waitSemaphoreInfo);
     VkRenderingAttachmentInfo RenderingAttachmentInfo(VkImageView view, VkClearValue* clear, VkImageLayout layout);
 
+    VkRenderingInfo RenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment,
+    VkRenderingAttachmentInfo* depthAttachment);
+
     bool LoadShaderModule(const char* filename, VkDevice device,
     VkShaderModule* outShaderModule);
 }

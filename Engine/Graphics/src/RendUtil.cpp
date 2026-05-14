@@ -195,6 +195,23 @@ VkRenderingAttachmentInfo rutil::RenderingAttachmentInfo(VkImageView view, VkCle
     return colorAttachment;
 }
 
+VkRenderingInfo rutil::RenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment,
+    VkRenderingAttachmentInfo* depthAttachment)
+{
+    VkRenderingInfo renderInfo {};
+    renderInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+    renderInfo.pNext = nullptr;
+
+    renderInfo.renderArea = VkRect2D { VkOffset2D { 0, 0 }, renderExtent };
+    renderInfo.layerCount = 1;
+    renderInfo.colorAttachmentCount = 1;
+    renderInfo.pColorAttachments = colorAttachment;
+    renderInfo.pDepthAttachment = depthAttachment;
+    renderInfo.pStencilAttachment = nullptr;
+
+    return renderInfo;
+}
+
 bool rutil::LoadShaderModule(const char *filename, VkDevice device, VkShaderModule*outShaderModule) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 

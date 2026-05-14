@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "Descriptors.h"
 #include "Pipelines.h"
+#include "MelonImgui.h"
 
 class Renderer {
 public:
@@ -18,6 +19,7 @@ private:
     Device _device;
     Descriptors _descriptors;
     Pipelines _pipelines;
+    MelonImgui _melonImgui;
 };
 
 #endif //MELONENGINE_RENDERER_H

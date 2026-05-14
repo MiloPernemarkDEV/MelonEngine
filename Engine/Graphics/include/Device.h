@@ -36,6 +36,8 @@ public:
     MelonImguiObjects _uiSyncObjects;
     VkInstance _instance = VK_NULL_HANDLE;
     VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
+    std::vector<VkImageView> _swapchainImageViews;
+
 private:
     GLFWwindow* _window;
     VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
@@ -45,7 +47,6 @@ private:
     VkSwapchainKHR _swapchain = VK_NULL_HANDLE;
     VkFormat _swapchainImageFormat = VK_FORMAT_UNDEFINED;
     std::vector<VkImage> _swapchainImages;
-    std::vector<VkImageView> _swapchainImageViews;
 
     FrameData _frameData[FRAMES_IN_FLIGHT];
     VkQueue _graphicsQueue = VK_NULL_HANDLE;

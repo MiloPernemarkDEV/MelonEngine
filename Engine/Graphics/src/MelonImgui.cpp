@@ -80,3 +80,14 @@ void MelonImgui::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)> func) 
     VK_CHECK(vkWaitForFences(_device->GetDevice(), 1, &_uiSyncObjects->_immFence, true, 9999999999));
 
 }
+
+void MelonImgui::Draw(VkCommandBuffer cmd, VkImageView targetImageView) {
+    VkRenderingAttachmentInfo colorAttachment = rutil::RenderingAttachmentInfo(targetImageView, nullptr, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+    VkRenderingInfo renderInfo = rutil::RenderingInfo(_device->_swapchainExtent, &colorAttachment, nullptr);
+
+    vkCmdBeginRendering(cmd, &renderInfo);
+
+    ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
+
+    vkCmdEndRendering(cmd);
+}

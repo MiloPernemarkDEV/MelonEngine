@@ -13,6 +13,7 @@ public:
     MelonImgui(Device* device, GLFWwindow* window);
     void Init();
     void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)> func);
+    void Draw(VkCommandBuffer cmd, VkImageView targetImageView);
 
     Device* _device;
     MelonImguiObjects* _uiSyncObjects;

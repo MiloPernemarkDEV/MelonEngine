@@ -7,14 +7,17 @@ Renderer::Renderer(GLFWwindow* window)
     : _window(window),
       _device(window),
       _descriptors(&_device),
-      _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device.GetDevice())
+      _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device.GetDevice()),
+      _melonImgui(&_device, window)
 {
+
 }
 
 bool Renderer::Init() {
     _device.Init();
     _descriptors.Init();
     _pipelines.Init();
+    _melonImgui.Init();
 
     _device._mainDeletionQueue.PushFunction([&]() {
         vmaDestroyAllocator(_device._allocator);
@@ -76,6 +79,9 @@ void Renderer::Draw()
     rutil::CopyImageToImage(cmd, _device._drawImage.image, _device.GetSwapchainImages()[swapchainImageIndex], _device._drawExtent, _device._swapchainExtent);
 
     rutil::TransitionImage(cmd, _device.GetSwapchainImages()[swapchainImageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+
+    _melonImgui.Draw(cmd, _device._swapchainImageViews[swapchainImageIndex]);
+
     rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL);
 
     VK_CHECK(vkEndCommandBuffer(cmd));
