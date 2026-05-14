@@ -6,7 +6,7 @@
 Application::Application(ArenaAlloc* globalArena)
     : persistentArena(globalArena)
 {
-    windowSystem = globalArena->add<WindowSystem>();
+    windowSystem = persistentArena->add<WindowSystem>();
 }
 
 bool Application::Init() {

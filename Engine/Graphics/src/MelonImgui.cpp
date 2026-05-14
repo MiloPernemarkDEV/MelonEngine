@@ -112,9 +112,6 @@ void MelonImGui::DrawDebugUI() {
         ImGui::SeparatorText("Parameters");
 
         ImGui::DragFloat4("Data 1", (float*)&selected.data.data1, 0.01f);
-        ImGui::DragFloat4("Data 2", (float*)&selected.data.data2, 0.01f);
-        ImGui::DragFloat4("Data 3", (float*)&selected.data.data3, 0.01f);
-        ImGui::DragFloat4("Data 4", (float*)&selected.data.data4, 0.01f);
     }
     ImGui::End();
 }
