@@ -8,6 +8,8 @@ add_library(Engine STATIC
         graphics/src/RendUtil.cpp
         pch.h
         graphics/include/VulkanTypes.h
+        graphics/include/Descriptors.h
+        graphics/include/Pipelines.h
 )
 
 # todo: add WindowSystem
@@ -21,6 +23,8 @@ target_sources(Engine PRIVATE
         core/src/MelonAssert.cpp
         graphics/src/Device.cpp
         graphics/src/Renderer.cpp
+        graphics/src/Descriptors.cpp
+        graphics/src/Pipelines.cpp
 )
 
 target_include_directories(Engine PUBLIC

@@ -3,6 +3,8 @@
 
 #include "Device.h"
 #include <GLFW/glfw3.h>
+#include "Descriptors.h"
+#include "Pipelines.h"
 
 class Renderer {
 public:
@@ -13,7 +15,9 @@ public:
 private:
     void DrawBackground(VkCommandBuffer cmd);
     GLFWwindow* _window;
-    Device _device = nullptr;
+    Device _device;
+    Descriptors _descriptors;
+    Pipelines _pipelines;
 };
 
 #endif //MELONENGINE_RENDERER_H

@@ -2,9 +2,8 @@
 #include "MelonAssert.h"
 
 
-namespace Heli
+namespace Melon
 {
-
     void HandleMelonAssert(const char* expr,
         const char* msg,
         const char* file,
@@ -14,8 +13,9 @@ namespace Heli
         std::cerr << "MELON ASSERTION FAILED\n";
         std::cerr << "Expression: " << expr << "\n";
 
-        if (msg)
+        if (msg) {
             std::cerr << "Message: " << msg << "\n";
+        }
 
         std::cerr << "File: " << file << "\n";
         std::cerr << "Line: " << line << "\n";

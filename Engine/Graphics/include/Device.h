@@ -5,8 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include "VulkanTypes.h"
-
 #include <vk_mem_alloc.h>
+#include "Descriptors.h"
 
 constexpr unsigned int FRAMES_IN_FLIGHT = 2;
 
@@ -32,6 +32,7 @@ public:
     AllocatedImage _drawImage;
     VkExtent2D _drawExtent;
     VkExtent2D  _swapchainExtent;
+
 private:
     GLFWwindow* _window;
     VkInstance _instance = VK_NULL_HANDLE;

@@ -70,8 +70,6 @@ void Device::Init() {
 
     InitCommands();
     InitSyncObjects();
-
-    _mainDeletionQueue.PushFunction([&]() {vmaDestroyAllocator(_allocator);} );
 }
 
 void Device::InitSwapchain() {

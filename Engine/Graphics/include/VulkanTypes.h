@@ -5,6 +5,7 @@
 #include <vk_mem_alloc.h>
 #include <deque>
 #include <functional>
+#include <span>
 
 struct DeleteQueue {
     std::deque<std::function<void()>> deletors;
@@ -34,7 +35,6 @@ struct FrameData {
     VkCommandPool _commandPool = VK_NULL_HANDLE;
     VkCommandBuffer _commandBuffer = VK_NULL_HANDLE;
 
-    // Sync objects
     VkSemaphore _swapchainSemaphore = VK_NULL_HANDLE;
     VkSemaphore _renderSemaphore = VK_NULL_HANDLE;
     VkFence _renderFence = VK_NULL_HANDLE;

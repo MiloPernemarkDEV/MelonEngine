@@ -3,8 +3,23 @@
 #include "RenderDefines.h"
 #include "RendUtil.h"
 
-Renderer::Renderer(GLFWwindow *window)
-    : _window(window), _device(window) {
+Renderer::Renderer(GLFWwindow* window)
+    : _window(window),
+      _device(window),
+      _descriptors(&_device),
+      _pipelines(&_descriptors)
+{
+}
+
+bool Renderer::Init() {
+    _device.Init();
+    _descriptors.Init();
+    _pipelines.Init(_device.GetDevice());
+
+    _device._mainDeletionQueue.PushFunction([&]() {
+        vmaDestroyAllocator(_device._allocator);
+    } );
+    return true;
 }
 
 void Renderer::Draw()
@@ -103,36 +118,28 @@ void Renderer::Draw()
     _device.IncrementFrameNumber();
 }
 
-bool Renderer::Init() {
-    _device.Init();
-    assert(_device._drawExtent.width > 0);
-    assert(_device._drawExtent.height > 0);
-    assert(_device._swapchainExtent.width > 0);
-    assert(_device._swapchainExtent.height > 0);
-
-    return true;
-}
-
 void Renderer::Terminate() {
     _device.Cleanup();
 }
 
 void Renderer::DrawBackground(VkCommandBuffer cmd) {
-    float flash = std::abs(std::sin(
-        static_cast<float>(_device.GetFrameNumber()) / 120.f));
-
-    VkClearColorValue clearValue;
-    clearValue = {{0.0f, 0.0f, flash, 1.0f}};
-
-    VkImageSubresourceRange clearRange =
-        rutil::ImageSubresourceRange(VK_IMAGE_ASPECT_COLOR_BIT);
-
-    vkCmdClearColorImage(
+    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, _pipelines._gradientPipeline);
+    vkCmdBindDescriptorSets(
         cmd,
-        _device.GetDrawImage().image,
-        VK_IMAGE_LAYOUT_GENERAL,
-        &clearValue,
+        VK_PIPELINE_BIND_POINT_COMPUTE,
+        _pipelines._gradientPipelineLayout,
+        0,
         1,
-        &clearRange
+        &_descriptors._drawImageDescriptors,
+        0,
+        nullptr
     );
+
+    vkCmdDispatch(
+        cmd,
+        std::ceil(_device._drawExtent.width / 16.0),
+        std::ceil(_device._drawExtent.height / 16.0),
+        1
+    );
+
 }
