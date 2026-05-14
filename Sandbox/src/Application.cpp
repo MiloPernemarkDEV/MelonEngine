@@ -1,4 +1,6 @@
 #include "Application.h"
+#include <chrono>
+#include <thread>
 
 Application::Application(ArenaAlloc* globalArena)
     : persistentArena(globalArena)
@@ -16,8 +18,20 @@ bool Application::Init() {
 }
 
 void Application::Run() const {
+
     while (!windowSystem->WindowShouldClose()) {
+
         windowSystem->PollForEvents();
+
+        //todo if rendering stop put thread to sleep
+
+        ImGui_ImplVulkan_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::ShowDemoWindow();
+
+        ImGui::Render();
 
         renderer->Draw();
 

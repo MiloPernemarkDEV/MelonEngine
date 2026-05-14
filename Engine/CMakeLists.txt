@@ -1,3 +1,25 @@
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
+
+add_library(imgui STATIC
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+)
+
+target_include_directories(imgui PUBLIC
+        ${IMGUI_DIR}
+        ${IMGUI_DIR}/backends
+        ${CMAKE_SOURCE_DIR}/Vendor/include
+)
+
+target_link_libraries(imgui PUBLIC
+        Vulkan::Vulkan
+        glfw3
+)
+
 add_library(Engine STATIC
         graphics/include/Renderer.h
         graphics/src/Renderer.cpp
@@ -10,6 +32,8 @@ add_library(Engine STATIC
         graphics/include/VulkanTypes.h
         graphics/include/Descriptors.h
         graphics/include/Pipelines.h
+        graphics/include/melonImgui.h
+        graphics/src/MelonImgui.cpp
 )
 
 # todo: add WindowSystem
@@ -25,6 +49,7 @@ target_sources(Engine PRIVATE
         graphics/src/Renderer.cpp
         graphics/src/Descriptors.cpp
         graphics/src/Pipelines.cpp
+        graphics/src/MelonImgui.cpp
 )
 
 target_include_directories(Engine PUBLIC
@@ -46,9 +71,9 @@ target_link_libraries(Engine PUBLIC
         glad
         assimp-vc145-mt.lib
         vk-bootstrap::vk-bootstrap
+        imgui
 )
 
 target_precompile_headers(Engine PUBLIC
         pch.h
 )
-

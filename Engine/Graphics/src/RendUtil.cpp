@@ -88,7 +88,8 @@ void rutil::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destin
     VkImageBlit2 blitRegion{ .sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = nullptr };
     blitRegion.srcOffsets[1].x = static_cast<int32_t>(srcSize.width);
     blitRegion.srcOffsets[1].y = static_cast<int32_t>(srcSize.height);
-    blitRegion.dstOffsets[1].z = 1;
+    blitRegion.srcOffsets[1].z = 1;
+
 
     blitRegion.dstOffsets[1].x = static_cast<int32_t>(dstSize.width);
     blitRegion.dstOffsets[1].y = static_cast<int32_t>(dstSize.height);
@@ -148,8 +149,19 @@ VkCommandBufferSubmitInfo rutil::CommandBufferSubmitInfo(VkCommandBuffer cmd) {
     return info;
 }
 
+VkCommandBufferAllocateInfo rutil::CommandBufferAllocateInfo(VkCommandPool pool, uint32_t count) {
+    VkCommandBufferAllocateInfo info {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .pNext = nullptr,
+        .commandPool = pool,
+        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandBufferCount = count,
+    };
+    return info;
+}
+
 VkSubmitInfo2 rutil::SubmitInfo(VkCommandBufferSubmitInfo *cmd, VkSemaphoreSubmitInfo *signalSemaphoreInfo,
-    VkSemaphoreSubmitInfo *waitSemaphoreInfo) {
+                                VkSemaphoreSubmitInfo *waitSemaphoreInfo) {
 
     VkSubmitInfo2 info = {};
     info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2;
@@ -165,6 +177,22 @@ VkSubmitInfo2 rutil::SubmitInfo(VkCommandBufferSubmitInfo *cmd, VkSemaphoreSubmi
     info.pCommandBufferInfos = cmd;
 
     return info;
+}
+
+VkRenderingAttachmentInfo rutil::RenderingAttachmentInfo(VkImageView view, VkClearValue *clear, VkImageLayout layout) {
+    VkRenderingAttachmentInfo colorAttachment {};
+    colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+    colorAttachment.pNext = nullptr;
+
+    colorAttachment.imageView = view;
+    colorAttachment.imageLayout = layout;
+    colorAttachment.loadOp = clear ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
+    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    if (clear) {
+        colorAttachment.clearValue = *clear;
+    }
+
+    return colorAttachment;
 }
 
 bool rutil::LoadShaderModule(const char *filename, VkDevice device, VkShaderModule*outShaderModule) {

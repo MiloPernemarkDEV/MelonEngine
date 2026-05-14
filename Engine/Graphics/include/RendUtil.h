@@ -15,16 +15,14 @@ namespace rutil {
     VkCommandBufferBeginInfo CommandBufferBeginInfo(VkCommandBufferUsageFlags flags);
     VkSemaphoreSubmitInfo SemaphoreSubmitInfo(VkPipelineStageFlags2 stageMask, VkSemaphore semaphore);
     VkCommandBufferSubmitInfo CommandBufferSubmitInfo(VkCommandBuffer cmd);
+    VkCommandBufferAllocateInfo CommandBufferAllocateInfo(VkCommandPool pool, uint32_t count);
 
     VkSubmitInfo2 SubmitInfo(VkCommandBufferSubmitInfo* cmd, VkSemaphoreSubmitInfo* signalSemaphoreInfo,
     VkSemaphoreSubmitInfo* waitSemaphoreInfo);
+    VkRenderingAttachmentInfo RenderingAttachmentInfo(VkImageView view, VkClearValue* clear, VkImageLayout layout);
 
     bool LoadShaderModule(const char* filename, VkDevice device,
     VkShaderModule* outShaderModule);
-
-
-
-
 }
 
 

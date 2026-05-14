@@ -5,20 +5,25 @@
 #include "Debug.h"
 
 
-Pipelines::Pipelines(Descriptors* descriptors)
-    : _descriptors(descriptors)
+Pipelines::Pipelines(Descriptors* descriptors, DeleteQueue* mainDeletetionQueue, VkDevice* device)
+    : _descriptors(descriptors), _mainDeletionQueue(mainDeletetionQueue), _device(device)
 {
 }
 
-void Pipelines::Init(VkDevice device) {
-    InitBackgroundPipelines(device);
+void Pipelines::Init() {
+    InitBackgroundPipelines();
 }
 
-void Pipelines::InitBackgroundPipelines(VkDevice device) {
-    GradientComputePipeline(device);
+void Pipelines::InitBackgroundPipelines() {
+    GradientComputePipeline();
+
+    _mainDeletionQueue->PushFunction([&]() {
+        vkDestroyPipelineLayout(*_device, _gradientPipelineLayout, nullptr);
+        vkDestroyPipeline(*_device, _gradientPipeline, nullptr);
+    });
 }
 
-void Pipelines::GradientComputePipeline(VkDevice device) {
+void Pipelines::GradientComputePipeline() {
     VkPipelineLayoutCreateInfo computeLayout = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext = nullptr,
@@ -26,10 +31,10 @@ void Pipelines::GradientComputePipeline(VkDevice device) {
         .pSetLayouts = &_descriptors->_drawImageDescriptorLayout,
     };
 
-    VK_CHECK(vkCreatePipelineLayout(device, &computeLayout, nullptr, &_gradientPipelineLayout));
+    VK_CHECK(vkCreatePipelineLayout(*_device, &computeLayout, nullptr, &_gradientPipelineLayout));
 
     VkShaderModule computeDrawShader;
-    if (!rutil::LoadShaderModule("Shaders/GLSL/gradient.comp.spv", device, &computeDrawShader))
+    if (!rutil::LoadShaderModule("Shaders/HLSL/gradient_compute.hlsl.spv", *_device, &computeDrawShader))
     {
         Debug::Log(LogLevel::ERROR, "Failed to load compute shader");
     }
@@ -39,7 +44,7 @@ void Pipelines::GradientComputePipeline(VkDevice device) {
     stageInfo.pNext = nullptr;
     stageInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
     stageInfo.module = computeDrawShader;
-    stageInfo.pName = "main";
+    stageInfo.pName = "CSmain";
 
     VkComputePipelineCreateInfo computePipelineCreateInfo{};
     computePipelineCreateInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
@@ -47,5 +52,6 @@ void Pipelines::GradientComputePipeline(VkDevice device) {
     computePipelineCreateInfo.layout = _gradientPipelineLayout;
     computePipelineCreateInfo.stage = stageInfo;
 
-    VK_CHECK(vkCreateComputePipelines(device,VK_NULL_HANDLE,1,&computePipelineCreateInfo, nullptr, &_gradientPipeline));
+    VK_CHECK(vkCreateComputePipelines(*_device,VK_NULL_HANDLE,1,&computePipelineCreateInfo, nullptr, &_gradientPipeline));
+    vkDestroyShaderModule(*_device, computeDrawShader, nullptr);
 }

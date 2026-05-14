@@ -42,4 +42,10 @@ struct FrameData {
     DeleteQueue _deletionQueue;
 };
 
+struct MelonImguiObjects {
+    VkFence _immFence = VK_NULL_HANDLE;
+    VkCommandBuffer _immCommandBuffer = VK_NULL_HANDLE;
+    VkCommandPool _immCommandPool = VK_NULL_HANDLE;
+};
+
 #endif //MELONENGINE_VULKANTYPES_H

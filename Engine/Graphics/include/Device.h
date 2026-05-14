@@ -25,6 +25,7 @@ public:
     unsigned int& GetFrameNumber() { return _frameNumber; }
     VkQueue& GetGraphicsQueue() { return _graphicsQueue; }
     void IncrementFrameNumber() { _frameNumber++; }
+    VkFormat& GetFormat() {return _swapchainImageFormat;}
 
     DeleteQueue _mainDeletionQueue;
     VmaAllocator _allocator;
@@ -32,12 +33,12 @@ public:
     AllocatedImage _drawImage;
     VkExtent2D _drawExtent;
     VkExtent2D  _swapchainExtent;
-
+    MelonImguiObjects _uiSyncObjects;
+    VkInstance _instance = VK_NULL_HANDLE;
+    VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
 private:
     GLFWwindow* _window;
-    VkInstance _instance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
-    VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
     VkDevice _device = VK_NULL_HANDLE;
     VkSurfaceKHR _surface = VK_NULL_HANDLE;
 

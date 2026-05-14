@@ -7,14 +7,14 @@ Renderer::Renderer(GLFWwindow* window)
     : _window(window),
       _device(window),
       _descriptors(&_device),
-      _pipelines(&_descriptors)
+      _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device.GetDevice())
 {
 }
 
 bool Renderer::Init() {
     _device.Init();
     _descriptors.Init();
-    _pipelines.Init(_device.GetDevice());
+    _pipelines.Init();
 
     _device._mainDeletionQueue.PushFunction([&]() {
         vmaDestroyAllocator(_device._allocator);
@@ -141,5 +141,4 @@ void Renderer::DrawBackground(VkCommandBuffer cmd) {
         std::ceil(_device._drawExtent.height / 16.0),
         1
     );
-
 }

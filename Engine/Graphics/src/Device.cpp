@@ -131,12 +131,9 @@ void Device::CleanupSwapchain() {
     }
 }
 
-// creates a command pool and a command buffer per frame in flight
-// -so we always have one ready for the device
 void Device::InitCommands() {
 
-    // check the Vulkan documentation on the command lifecycle
-    VkCommandPoolCreateInfo createInfo{
+    VkCommandPoolCreateInfo poolInfo{
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = nullptr,
         .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
@@ -144,16 +141,18 @@ void Device::InitCommands() {
     };
 
     for (auto & i : _frameData) {
-        VK_CHECK(vkCreateCommandPool(_device, &createInfo, nullptr, &i._commandPool));
-        VkCommandBufferAllocateInfo commandAllocInfo{
-            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-            .pNext = nullptr,
-            .commandPool = i._commandPool,
-            .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-            .commandBufferCount = 1,
-        };
+        VK_CHECK(vkCreateCommandPool(_device, &poolInfo, nullptr, &i._commandPool));
+        VkCommandBufferAllocateInfo commandAllocInfo = rutil::CommandBufferAllocateInfo(i._commandPool,1);
         VK_CHECK(vkAllocateCommandBuffers(_device, &commandAllocInfo, &i._commandBuffer));
     }
+
+    VK_CHECK(vkCreateCommandPool(_device, &poolInfo, nullptr, &_uiSyncObjects._immCommandPool));
+    VkCommandBufferAllocateInfo cmdAllocInfo = rutil::CommandBufferAllocateInfo(_uiSyncObjects._immCommandPool,1);
+    VK_CHECK(vkAllocateCommandBuffers(_device, &cmdAllocInfo, &_uiSyncObjects._immCommandBuffer));
+
+    _mainDeletionQueue.PushFunction([=]() {
+        vkDestroyCommandPool(_device, _uiSyncObjects._immCommandPool, nullptr);
+    });
 }
 
 // When a command pool is destroyed all cmd buffers allocated from it are freed
@@ -182,6 +181,11 @@ void Device::InitSyncObjects() {
         VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._swapchainSemaphore));
         VK_CHECK(vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &i._renderSemaphore));
     }
+
+    VK_CHECK(vkCreateFence(_device, &fenceInfo, nullptr, &_uiSyncObjects._immFence));
+    _mainDeletionQueue.PushFunction([=]() {
+        vkDestroyFence(_device, _uiSyncObjects._immFence, nullptr);
+    });
 }
 
 void Device::Cleanup() {
