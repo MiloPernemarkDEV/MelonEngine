@@ -23,6 +23,7 @@ namespace rutil {
 
     VkRenderingInfo RenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment,
     VkRenderingAttachmentInfo* depthAttachment);
+    VkPipelineShaderStageCreateInfo PipelineShaderStageCreateInfo(VkShaderStageFlagBits flags, VkShaderModule shaderModule);
 
     bool LoadShaderModule(const char* filename, VkDevice device,
     VkShaderModule* outShaderModule);

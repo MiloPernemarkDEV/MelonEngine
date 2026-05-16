@@ -19,7 +19,6 @@ struct DeleteQueue {
         for (auto& deletor : deletors) {
             deletor();
         }
-
         deletors.clear();
     }
 };
@@ -29,7 +28,7 @@ struct AllocatedImage {
     VkImageView imageView = VK_NULL_HANDLE;
     VmaAllocation allocation = VK_NULL_HANDLE;
     VkExtent3D imageExtent;
-    VkFormat imageFormat;
+    VkFormat imageFormat = VK_FORMAT_UNDEFINED;
 };
 
 struct FrameData {

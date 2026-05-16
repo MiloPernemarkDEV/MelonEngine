@@ -1,53 +1,9 @@
 #include "pch.h"
 #include "RendUtil.h"
 
-VkImageSubresourceRange rutil::ImageSubresourceRange(VkImageAspectFlags aspectMask)
-{
-    VkImageSubresourceRange subImage {
-        .aspectMask = aspectMask,
-        .baseMipLevel = 0,
-        .levelCount = VK_REMAINING_MIP_LEVELS,
-        .baseArrayLayer = 0,
-        .layerCount = VK_REMAINING_ARRAY_LAYERS,
-    };
-    return subImage;
-}
-
-
-void rutil::TransitionImage(VkCommandBuffer cmd, VkImage image, VkImageLayout currentLayout,
-    VkImageLayout newLayout)
-{
-    VkImageAspectFlags aspectMask = (newLayout ==
-        VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
-
-    VkImageSubresourceRange subImage = ImageSubresourceRange(aspectMask);
-
-    // if many transitions are happening the stageMask needs to be changed to something more fitting
-    // as it is currently inefficient
-    VkImageMemoryBarrier2 barrier = {
-        .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-        .pNext = nullptr,
-        .srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
-        .srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT,
-        .dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
-        .dstAccessMask =  VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT,
-        .oldLayout = currentLayout,
-        .newLayout = newLayout,
-        .srcQueueFamilyIndex = 0,
-        .dstQueueFamilyIndex = 0,
-        .image = image,
-        .subresourceRange = subImage,
-    };
-
-    VkDependencyInfo depInfo = {
-        .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
-        .pNext = nullptr,
-        .imageMemoryBarrierCount = 1,
-        .pImageMemoryBarriers = &barrier,
-    };
-
-    vkCmdPipelineBarrier2(cmd, &depInfo);
-}
+//////////////////////////
+// Create Info Builders //
+//////////////////////////
 
 VkImageCreateInfo rutil::ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent) {
     VkImageCreateInfo info {
@@ -83,43 +39,8 @@ VkImageViewCreateInfo rutil::ImageViewCreateInfo(VkFormat format, VkImage image,
     return info;
 }
 
-void rutil::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize,
-    VkExtent2D dstSize) {
-    VkImageBlit2 blitRegion{ .sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = nullptr };
-    blitRegion.srcOffsets[1].x = static_cast<int32_t>(srcSize.width);
-    blitRegion.srcOffsets[1].y = static_cast<int32_t>(srcSize.height);
-    blitRegion.srcOffsets[1].z = 1;
-
-
-    blitRegion.dstOffsets[1].x = static_cast<int32_t>(dstSize.width);
-    blitRegion.dstOffsets[1].y = static_cast<int32_t>(dstSize.height);
-    blitRegion.dstOffsets[1].z = 1;
-
-    blitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    blitRegion.srcSubresource.baseArrayLayer = 0;
-    blitRegion.srcSubresource.layerCount = 1;
-    blitRegion.srcSubresource.mipLevel = 0;
-
-    blitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    blitRegion.dstSubresource.baseArrayLayer = 0;
-    blitRegion.dstSubresource.layerCount = 1;
-    blitRegion.dstSubresource.mipLevel = 0;
-
-
-    VkBlitImageInfo2 blitInfo{ .sType = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2, .pNext = nullptr };
-    blitInfo.dstImage = destination;
-    blitInfo.dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    blitInfo.srcImage = source;
-    blitInfo.srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-    blitInfo.filter = VK_FILTER_LINEAR;
-    blitInfo.regionCount = 1;
-    blitInfo.pRegions = &blitRegion;
-
-    vkCmdBlitImage2(cmd, &blitInfo);
-}
-
 VkCommandBufferBeginInfo rutil::CommandBufferBeginInfo(VkCommandBufferUsageFlags flags) {
-   VkCommandBufferBeginInfo info {
+    VkCommandBufferBeginInfo info {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
         .pNext = nullptr,
         .flags = flags,
@@ -212,6 +133,103 @@ VkRenderingInfo rutil::RenderingInfo(VkExtent2D renderExtent, VkRenderingAttachm
     return renderInfo;
 }
 
+VkPipelineShaderStageCreateInfo rutil::PipelineShaderStageCreateInfo(VkShaderStageFlagBits flags,
+    VkShaderModule shaderModule) {
+    VkPipelineShaderStageCreateInfo info {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+        .pNext = nullptr,
+        .stage = flags,
+        .module = shaderModule,
+        .pName = "main"
+    };
+}
+
+//////////////////////////////
+// Create Info Builders END //
+//////////////////////////////
+
+VkImageSubresourceRange rutil::ImageSubresourceRange(VkImageAspectFlags aspectMask)
+{
+    VkImageSubresourceRange subImage {
+        .aspectMask = aspectMask,
+        .baseMipLevel = 0,
+        .levelCount = VK_REMAINING_MIP_LEVELS,
+        .baseArrayLayer = 0,
+        .layerCount = VK_REMAINING_ARRAY_LAYERS,
+    };
+    return subImage;
+}
+
+void rutil::TransitionImage(VkCommandBuffer cmd, VkImage image, VkImageLayout currentLayout,
+    VkImageLayout newLayout)
+{
+    VkImageAspectFlags aspectMask = (newLayout ==
+        VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+
+    VkImageSubresourceRange subImage = ImageSubresourceRange(aspectMask);
+
+    // if many transitions are happening the stageMask needs to be changed to something more fitting
+    // as it is currently inefficient
+    VkImageMemoryBarrier2 barrier = {
+        .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+        .pNext = nullptr,
+        .srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+        .srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT,
+        .dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+        .dstAccessMask =  VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT,
+        .oldLayout = currentLayout,
+        .newLayout = newLayout,
+        .srcQueueFamilyIndex = 0,
+        .dstQueueFamilyIndex = 0,
+        .image = image,
+        .subresourceRange = subImage,
+    };
+
+    VkDependencyInfo depInfo = {
+        .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+        .pNext = nullptr,
+        .imageMemoryBarrierCount = 1,
+        .pImageMemoryBarriers = &barrier,
+    };
+
+    vkCmdPipelineBarrier2(cmd, &depInfo);
+}
+
+void rutil::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize,
+    VkExtent2D dstSize) {
+    VkImageBlit2 blitRegion{ .sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = nullptr };
+    blitRegion.srcOffsets[1].x = static_cast<int32_t>(srcSize.width);
+    blitRegion.srcOffsets[1].y = static_cast<int32_t>(srcSize.height);
+    blitRegion.srcOffsets[1].z = 1;
+
+
+    blitRegion.dstOffsets[1].x = static_cast<int32_t>(dstSize.width);
+    blitRegion.dstOffsets[1].y = static_cast<int32_t>(dstSize.height);
+    blitRegion.dstOffsets[1].z = 1;
+
+    blitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    blitRegion.srcSubresource.baseArrayLayer = 0;
+    blitRegion.srcSubresource.layerCount = 1;
+    blitRegion.srcSubresource.mipLevel = 0;
+
+    blitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    blitRegion.dstSubresource.baseArrayLayer = 0;
+    blitRegion.dstSubresource.layerCount = 1;
+    blitRegion.dstSubresource.mipLevel = 0;
+
+
+    VkBlitImageInfo2 blitInfo{ .sType = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2, .pNext = nullptr };
+    blitInfo.dstImage = destination;
+    blitInfo.dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    blitInfo.srcImage = source;
+    blitInfo.srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    blitInfo.filter = VK_FILTER_LINEAR;
+    blitInfo.regionCount = 1;
+    blitInfo.pRegions = &blitRegion;
+
+    vkCmdBlitImage2(cmd, &blitInfo);
+}
+
 bool rutil::LoadShaderModule(const char *filename, VkDevice device, VkShaderModule*outShaderModule) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
@@ -234,7 +252,6 @@ bool rutil::LoadShaderModule(const char *filename, VkDevice device, VkShaderModu
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.pNext = nullptr;
 
-
     createInfo.codeSize = buffer.size() * sizeof(uint32_t);
     createInfo.pCode = buffer.data();
 
@@ -245,7 +262,3 @@ bool rutil::LoadShaderModule(const char *filename, VkDevice device, VkShaderModu
     *outShaderModule = shaderModule;
     return true;
 }
-
-
-
-
