@@ -142,6 +142,16 @@ VkPipelineShaderStageCreateInfo rutil::PipelineShaderStageCreateInfo(VkShaderSta
         .module = shaderModule,
         .pName = "main"
     };
+    return info;
+}
+
+// Extend descriptors are needed
+VkPipelineLayoutCreateInfo rutil::PipelineLayoutCreateInfo() {
+    VkPipelineLayoutCreateInfo info{
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+        .pNext = nullptr,
+    };
+    return info;
 }
 
 //////////////////////////////

@@ -130,3 +130,8 @@ void PipelineBuilder::DisableDepthTest() {
     _depthStencil.minDepthBounds = 0.f;
     _depthStencil.maxDepthBounds = 1.f;
 }
+
+void PipelineBuilder::SetDepthFormat(VkFormat format) {
+    _renderInfo.depthAttachmentFormat = format;
+}
+

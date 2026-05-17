@@ -29,6 +29,7 @@ public:
     void DisableBlending();
     void SetColorAttachmentFormat(VkFormat format);
     void DisableDepthTest();
+    void SetDepthFormat(VkFormat format);
 };
 
 

@@ -8,7 +8,7 @@ Renderer::Renderer(GLFWwindow* window)
     : _window(window),
       _device(window),
       _descriptors(&_device),
-      _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device.GetDevice()),
+      _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device),
       _melonImgui(&_device, window, &_pipelines)
 {
 
@@ -38,7 +38,7 @@ void Renderer::Draw()
         1000000000
     ));
 
-    _device.GetCurrentFrame()._deletionQueue.Flush();
+    frame._deletionQueue.Flush();
 
     VK_CHECK(vkResetFences(
         _device.GetDevice(),
@@ -68,38 +68,107 @@ void Renderer::Draw()
 
     VK_CHECK(vkBeginCommandBuffer(cmd, &beginInfo));
 
-    if (_device.GetFrameNumber() == 0) {
-        rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
+    // initialize draw image once
+    if (_device.GetFrameNumber() == 0)
+    {
+        rutil::TransitionImage(
+            cmd,
+            _device._drawImage.image,
+            VK_IMAGE_LAYOUT_UNDEFINED,
+            VK_IMAGE_LAYOUT_GENERAL
+        );
     }
 
+    // draw background
     DrawBackground(cmd);
 
-    rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    rutil::TransitionImage(cmd, _device.GetSwapchainImages()[swapchainImageIndex], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    // geometry pass
+    rutil::TransitionImage(
+        cmd,
+        _device._drawImage.image,
+        VK_IMAGE_LAYOUT_GENERAL,
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+    );
 
-    rutil::CopyImageToImage(cmd, _device._drawImage.image, _device.GetSwapchainImages()[swapchainImageIndex], _device._drawExtent, _device._swapchainExtent);
+    DrawGeometry(cmd);
 
-    rutil::TransitionImage(cmd, _device.GetSwapchainImages()[swapchainImageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+    // prepare for copy
+    rutil::TransitionImage(
+        cmd,
+        _device._drawImage.image,
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+    );
 
-    _melonImgui.Draw(cmd, _device._swapchainImageViews[swapchainImageIndex]);
+    rutil::TransitionImage(
+        cmd,
+        _device.GetSwapchainImages()[swapchainImageIndex],
+        VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+    );
 
-    rutil::TransitionImage(cmd, _device._drawImage.image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL);
+    // copy draw image -> swapchain
+    rutil::CopyImageToImage(
+        cmd,
+        _device._drawImage.image,
+        _device.GetSwapchainImages()[swapchainImageIndex],
+        _device._drawExtent,
+        _device._swapchainExtent
+    );
+
+    // prepare swapchain image for imgui rendering
+    rutil::TransitionImage(
+        cmd,
+        _device.GetSwapchainImages()[swapchainImageIndex],
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+    );
+
+    // draw imgui on top
+    _melonImgui.Draw(
+        cmd,
+        _device._swapchainImageViews[swapchainImageIndex]
+    );
+
+    // prepare for presentation
+    rutil::TransitionImage(
+        cmd,
+        _device.GetSwapchainImages()[swapchainImageIndex],
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+    );
+
+    // reset draw image for next frame
+    rutil::TransitionImage(
+        cmd,
+        _device._drawImage.image,
+        VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        VK_IMAGE_LAYOUT_GENERAL
+    );
 
     VK_CHECK(vkEndCommandBuffer(cmd));
 
-    VkCommandBufferSubmitInfo cmdInfo = rutil::CommandBufferSubmitInfo(cmd);
+    VkCommandBufferSubmitInfo cmdInfo =
+        rutil::CommandBufferSubmitInfo(cmd);
 
-    VkSemaphoreSubmitInfo waitInfo = rutil::SemaphoreSubmitInfo(
-        VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
-        frame._swapchainSemaphore
-    );
+    VkSemaphoreSubmitInfo waitInfo =
+        rutil::SemaphoreSubmitInfo(
+            VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+            frame._swapchainSemaphore
+        );
 
-    VkSemaphoreSubmitInfo signalInfo = rutil::SemaphoreSubmitInfo(
-        VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
-        frame._renderSemaphore
-    );
+    VkSemaphoreSubmitInfo signalInfo =
+        rutil::SemaphoreSubmitInfo(
+            VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+            frame._renderSemaphore
+        );
 
-    VkSubmitInfo2 submit = rutil::SubmitInfo(&cmdInfo, &signalInfo, &waitInfo);
+    VkSubmitInfo2 submit =
+        rutil::SubmitInfo(
+            &cmdInfo,
+            &signalInfo,
+            &waitInfo
+        );
 
     VK_CHECK(vkQueueSubmit2(
         _device.GetGraphicsQueue(),
@@ -121,8 +190,6 @@ void Renderer::Draw()
         _device.GetGraphicsQueue(),
         &presentInfo
     ));
-
-    _device.IncrementFrameNumber();
 }
 
 void Renderer::Terminate() {
@@ -156,4 +223,32 @@ void Renderer::DrawBackground(VkCommandBuffer cmd) {
         std::ceil(_device._drawExtent.height / 16.0),
         1
     );
+}
+
+void Renderer::DrawGeometry(VkCommandBuffer cmd) {
+    VkRenderingAttachmentInfo colorAttachment = rutil::RenderingAttachmentInfo(_device._drawImage.imageView, nullptr, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+    VkRenderingInfo renderingInfo = rutil::RenderingInfo(_device._drawExtent, &colorAttachment, nullptr);
+    vkCmdBeginRendering(cmd, &renderingInfo);
+
+    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelines._trianglePipeline);
+
+    VkViewport viewport;
+    viewport.x = 0;
+    viewport.y = 0;
+    viewport.width = _device._drawExtent.width;
+    viewport.height = _device._drawExtent.height;
+    viewport.minDepth = 0.f;
+    viewport.maxDepth = 1.f;
+
+    vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+    VkRect2D scissor = {};
+    scissor.offset.x = 0;
+    scissor.offset.y = 0;
+    scissor.extent.width = _device._drawExtent.width;
+    scissor.extent.height = _device._drawExtent.height;
+
+    vkCmdSetScissor(cmd, 0, 1, &scissor);
+    vkCmdDraw(cmd, 3, 1, 0, 0);
+    vkCmdEndRendering(cmd);
 }

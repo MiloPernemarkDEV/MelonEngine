@@ -18,6 +18,7 @@ public:
     void DrawDebugUI();
 private:
     void DrawBackground(VkCommandBuffer cmd);
+    void DrawGeometry(VkCommandBuffer cmd);
     GLFWwindow* _window;
     Device _device;
     Descriptors _descriptors;

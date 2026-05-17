@@ -25,6 +25,9 @@ namespace rutil {
     VkRenderingAttachmentInfo* depthAttachment);
     VkPipelineShaderStageCreateInfo PipelineShaderStageCreateInfo(VkShaderStageFlagBits flags, VkShaderModule shaderModule);
 
+
+    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo();
+
     bool LoadShaderModule(const char* filename, VkDevice device,
     VkShaderModule* outShaderModule);
 }

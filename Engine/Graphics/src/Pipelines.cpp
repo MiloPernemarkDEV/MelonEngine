@@ -4,9 +4,9 @@
 #include "RendUtil.h"
 #include "Debug.h"
 #include "VulkanTypes.h"
+#include "PipelineBuilder.h"
 
-
-Pipelines::Pipelines(Descriptors* descriptors, DeleteQueue* mainDeletetionQueue, VkDevice* device)
+Pipelines::Pipelines(Descriptors* descriptors, DeleteQueue* mainDeletetionQueue, Device* device)
     : _descriptors(descriptors), _mainDeletionQueue(mainDeletetionQueue), _device(device)
 {
 }
@@ -17,11 +17,14 @@ void Pipelines::Init() {
 
 void Pipelines::InitBackgroundPipelines() {
     ComputePipeline();
+    TrianglePipeline();
 
     _mainDeletionQueue->PushFunction([&]() {
-        vkDestroyPipelineLayout(*_device, _gradientPipelineLayout, nullptr);
-        vkDestroyPipeline(*_device, _gradientPipeline, nullptr);
-        vkDestroyPipeline(*_device, _skyPipeline, nullptr);
+        vkDestroyPipelineLayout(_device->GetDevice(), _gradientPipelineLayout, nullptr);
+        vkDestroyPipeline(_device->GetDevice(), _gradientPipeline, nullptr);
+        vkDestroyPipeline(_device->GetDevice(), _skyPipeline, nullptr);
+        vkDestroyPipelineLayout(_device->GetDevice(), _trianglePipelineLayout, nullptr);
+        vkDestroyPipeline(_device->GetDevice(), _trianglePipeline, nullptr);
     });
 }
 
@@ -40,16 +43,16 @@ void Pipelines::ComputePipeline() {
         .pPushConstantRanges = &pushConstant
     };
 
-    VK_CHECK(vkCreatePipelineLayout(*_device, &computeLayout, nullptr, &_gradientPipelineLayout));
+    VK_CHECK(vkCreatePipelineLayout(_device->GetDevice(), &computeLayout, nullptr, &_gradientPipelineLayout));
 
     VkShaderModule gradientShader;
-    if (!rutil::LoadShaderModule("Shaders/GLSL/gradient.comp.spv", *_device, &gradientShader))
+    if (!rutil::LoadShaderModule("Shaders/GLSL/gradient.comp.spv", _device->GetDevice(), &gradientShader))
     {
         Debug::Log(LogLevel::ERROR, "Failed to load compute shader");
     }
 
     VkShaderModule skyShader;
-    if (!rutil::LoadShaderModule("Shaders/GLSL/sky.comp.spv", *_device, &skyShader))
+    if (!rutil::LoadShaderModule("Shaders/GLSL/sky.comp.spv", _device->GetDevice(), &skyShader))
     {
         Debug::Log(LogLevel::ERROR, "Failed to load compute shader");
     }
@@ -76,7 +79,7 @@ void Pipelines::ComputePipeline() {
     gradient.data.data1 = Vec4f(1, 0, 0, 1);
     gradient.data.data2 = Vec4f(0, 0, 1, 1);
 
-    VK_CHECK(vkCreateComputePipelines(*_device,VK_NULL_HANDLE,1,&computePipelineCreateInfo, nullptr, &gradient.pipeline));
+    VK_CHECK(vkCreateComputePipelines(_device->GetDevice(),VK_NULL_HANDLE,1,&computePipelineCreateInfo, nullptr, &gradient.pipeline));
 
     computePipelineCreateInfo.stage.module = skyShader;
     ComputeEffect sky;
@@ -86,14 +89,43 @@ void Pipelines::ComputePipeline() {
 
     sky.data.data1 = Vec4f(0.1, 0.2, 0.4 ,0.97);
 
-    VK_CHECK(vkCreateComputePipelines(*_device, VK_NULL_HANDLE, 1, &computePipelineCreateInfo, nullptr, &sky.pipeline));
+    VK_CHECK(vkCreateComputePipelines(_device->GetDevice(), VK_NULL_HANDLE, 1, &computePipelineCreateInfo, nullptr, &sky.pipeline));
 
     _backgroundEffects.push_back(gradient);
     _backgroundEffects.push_back(sky);
 
-    vkDestroyShaderModule(*_device, gradientShader, nullptr);
-    vkDestroyShaderModule(*_device, skyShader, nullptr);
+    vkDestroyShaderModule(_device->GetDevice(), gradientShader, nullptr);
+    vkDestroyShaderModule(_device->GetDevice(), skyShader, nullptr);
 
 }
 
+void Pipelines::TrianglePipeline() {
+    VkShaderModule triangleVertexShader;
+    if (!rutil::LoadShaderModule("Shaders/GLSL/colored_triangle.vert.spv", _device->GetDevice(), &triangleVertexShader)) {
+        Debug::Log(LogLevel::ERROR, "Failed to load vertex shader");
+    }
+    VkShaderModule triangleFragmentShader;
+    if (!rutil::LoadShaderModule("Shaders/GLSL/colored_triangle.frag.spv", _device->GetDevice(), &triangleFragmentShader)) {
+       Debug::Log(LogLevel::ERROR, "Failed to load fragment shader");
+   }
 
+   VkPipelineLayoutCreateInfo pipeInfo = rutil::PipelineLayoutCreateInfo();
+   VK_CHECK(vkCreatePipelineLayout(_device->GetDevice(), &pipeInfo, nullptr, &_trianglePipelineLayout));
+
+    PipelineBuilder pipelineBuilder;
+    pipelineBuilder._pipelineLayout = _trianglePipelineLayout;
+    pipelineBuilder.SetShaders(triangleVertexShader, triangleFragmentShader);
+    pipelineBuilder.SetInputTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+    pipelineBuilder.SetPolygonMode(VK_POLYGON_MODE_FILL);
+    pipelineBuilder.SetCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
+    pipelineBuilder.SetMultisamplingModeNone();
+    pipelineBuilder.DisableBlending();
+    pipelineBuilder.DisableDepthTest();
+    pipelineBuilder.SetColorAttachmentFormat(_device->_drawImage.imageFormat);
+    pipelineBuilder.SetDepthFormat(VK_FORMAT_UNDEFINED);
+
+    _trianglePipeline = pipelineBuilder.BuildPipeline(_device->GetDevice());
+
+    vkDestroyShaderModule(_device->GetDevice(), triangleVertexShader, nullptr);
+    vkDestroyShaderModule(_device->GetDevice(), triangleFragmentShader, nullptr);
+}
