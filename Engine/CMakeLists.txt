@@ -37,6 +37,7 @@ add_library(Engine STATIC
         graphics/src/MelonImgui.cpp
         graphics/include/PipelineBuilder.h
         graphics/src/PipelineBuilder.cpp
+        graphics/src/Buffer.cpp
 )
 
 # todo: add WindowSystem

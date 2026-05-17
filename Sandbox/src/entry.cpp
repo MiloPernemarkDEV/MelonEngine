@@ -1,6 +1,7 @@
 #include "ArenaAlloc.h"
 #include "Application.h"
 #include <stdexcept>
+#include <iostream>
 
 int main() {
     ArenaAlloc globalMemory(400 * 1024 * 1024);

@@ -88,3 +88,5 @@ Sandbox/*.exe
 Engine/*.exe
 
 Vendor/assimp
+.vscode/
+*.spv

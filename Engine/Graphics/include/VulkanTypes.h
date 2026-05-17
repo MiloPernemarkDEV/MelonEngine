@@ -62,4 +62,10 @@ struct ComputeEffect {
     ComputePushConstants data;
 };
 
+struct AllocatedBuffer {
+    VkBuffer buffer = VK_NULL_HANDLE;
+    VmaAllocation allocation = VK_NULL_HANDLE;
+    VmaAllocationInfo info{};
+};
+
 #endif //MELONENGINE_VULKANTYPES_H

@@ -2,6 +2,9 @@
 #include <chrono>
 #include <thread>
 #include "MelonImGui.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_vulkan.h"
 
 Application::Application(ArenaAlloc* globalArena)
     : persistentArena(globalArena)

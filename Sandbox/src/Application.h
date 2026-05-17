@@ -1,7 +1,3 @@
-//
-// Created by milos on 2026-05-09.
-//
-
 #ifndef MELONENGINE_APPLICATION_H
 #define MELONENGINE_APPLICATION_H
 

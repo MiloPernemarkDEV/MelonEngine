@@ -1,0 +1,18 @@
+#ifndef MELONENGINE_BUFFER_H
+#define MELONENGINE_BUFFER_H
+
+#include <vulkan/vulkan.h>
+#include <vk_mem_alloc.h>
+#include "VulkanTypes.h"
+#include "Device.h"
+
+class Buffer {
+public:
+    Buffer(Device* device);
+    AllocatedBuffer Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) const;
+    void Destroy(const AllocatedBuffer& buffer) const;
+private:
+    Device* _device;
+};
+
+#endif //MELONENGINE_BUFFER_H
