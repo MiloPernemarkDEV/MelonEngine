@@ -1,12 +1,13 @@
-#ifndef MELONENGINE_VULKANTYPES_H
-#define MELONENGINE_VULKANTYPES_H
+#ifndef MELONENGINE_VULKAN_TYPES_H
+#define MELONENGINE_VULKAN_TYPES_H
 
 #include <vulkan/vulkan.h>
 #include <vk_mem_alloc.h>
 #include <deque>
 #include <functional>
-#include <span>
 #include "math/Vec4f.h"
+#include "math/Vec3f.h"
+#include "math/Mat4.h"
 
 struct DeleteQueue {
     std::deque<std::function<void()>> deletors;
@@ -68,4 +69,25 @@ struct AllocatedBuffer {
     VmaAllocationInfo info{};
 };
 
-#endif //MELONENGINE_VULKANTYPES_H
+struct Vertex {
+    Vec3f position;
+    float uvX;
+    Vec3f normal;
+    float uvY;
+    Vec4f color;
+};
+
+struct GPUMeshBuffers {
+    AllocatedBuffer indexBuffer;
+    AllocatedBuffer vertexBuffer;
+    // The device address is like a GPU pointer to an
+    // exact address in the gpus virtual address space
+    VkDeviceAddress vertexBufferAddress;
+};
+
+struct GPUDrawPushConstants {
+    Mat4 worldMatrix;
+    VkDeviceAddress vertexBuffer;
+};
+
+#endif //MELONENGINE_VULKAN_TYPES_H

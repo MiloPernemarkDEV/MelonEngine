@@ -3,8 +3,9 @@
 #include "RenderDefines.h"
 
 #define VMA_IMPLEMENTATION
-#include <vk_mem_alloc.h>
+#include "vk_mem_alloc.h"
 #include "RendUtil.h"
+#include "Buffer.h"
 
 Device::Device(GLFWwindow* window)
     : _window(window)
@@ -153,6 +154,33 @@ void Device::InitCommands() {
     _mainDeletionQueue.PushFunction([=]() {
         vkDestroyCommandPool(_device, _uiSyncObjects._immCommandPool, nullptr);
     });
+}
+
+GPUMeshBuffers Device::UploadMesh(std::span<uint32_t> indices, std::span<Vertex> vertices) {
+    const size_t vertexBufferSize = vertices.size() * sizeof(Vertex);
+    const size_t indexBufferSize = indices.size() * sizeof(uint32_t);
+
+    GPUMeshBuffers newSurface;
+
+    newSurface.vertexBuffer = Buffer::Create(
+        vertexBufferSize,
+        VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
+        VMA_MEMORY_USAGE_GPU_ONLY
+    );
+    // get device address
+    VkBufferDeviceAddressInfo deviceAdressInfo{
+        .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+        .buffer = newSurface.vertexBuffer.buffer
+    };
+
+    // store device address
+    newSurface.vertexBufferAddress = vkGetBufferDeviceAddress(_device, &deviceAdressInfo);
+
+    newSurface.indexBuffer = Buffer::Create(
+        indexBufferSize,
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        VMA_MEMORY_USAGE_GPU_ONLY
+    );
 }
 
 // When a command pool is destroyed all cmd buffers allocated from it are freed

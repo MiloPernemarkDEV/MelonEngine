@@ -30,7 +30,7 @@ add_library(Engine STATIC
         graphics/include/RendUtil.h
         graphics/src/RendUtil.cpp
         pch.h
-        graphics/include/VulkanTypes.h
+        graphics/include/RenderTypes.h
         graphics/include/Descriptors.h
         graphics/include/Pipelines.h
         graphics/include/MelonImgui.h

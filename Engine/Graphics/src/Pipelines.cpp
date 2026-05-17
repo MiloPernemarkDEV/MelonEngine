@@ -3,7 +3,7 @@
 #include "RenderDefines.h"
 #include "RendUtil.h"
 #include "Debug.h"
-#include "VulkanTypes.h"
+#include "RenderTypes.h"
 #include "PipelineBuilder.h"
 
 Pipelines::Pipelines(Descriptors* descriptors, DeleteQueue* mainDeletetionQueue, Device* device)

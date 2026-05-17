@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.h>
 #include <functional>
-#include "VulkanTypes.h"
+#include "RenderTypes.h"
 #include <GLFW/glfw3.h>
 #include "Pipelines.h"
 

@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.h>
 #include "Descriptors.h"
-#include "VulkanTypes.h"
+#include "RenderTypes.h"
 #include "Device.h"
 
 class Pipelines {

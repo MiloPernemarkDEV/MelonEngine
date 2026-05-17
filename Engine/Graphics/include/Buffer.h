@@ -3,13 +3,13 @@
 
 #include <vulkan/vulkan.h>
 #include <vk_mem_alloc.h>
-#include "VulkanTypes.h"
+#include "RenderTypes.h"
 #include "Device.h"
 
 class Buffer {
 public:
     Buffer(Device* device);
-    AllocatedBuffer Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) const;
+    static AllocatedBuffer Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) const;
     void Destroy(const AllocatedBuffer& buffer) const;
 private:
     Device* _device;

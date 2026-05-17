@@ -6,7 +6,7 @@
 #include "Descriptors.h"
 #include "Pipelines.h"
 #include "MelonImGui.h"
-#include "VulkanTypes.h"
+#include "RenderTypes.h"
 #include <vector>
 
 class Renderer {

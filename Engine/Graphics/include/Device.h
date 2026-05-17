@@ -1,11 +1,14 @@
 #ifndef MELONENGINE_DEVICE_H
 #define MELONENGINE_DEVICE_H
 
-#include <vulkan/vulkan.h>
-#include <GLFW/glfw3.h>
+#include <span>
 #include <vector>
-#include "VulkanTypes.h"
-#include <vk_mem_alloc.h>
+
+#include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
+
+#include "RenderTypes.h"
+#include "vk_mem_alloc.h"
 #include "Descriptors.h"
 
 constexpr unsigned int FRAMES_IN_FLIGHT = 2;
@@ -26,6 +29,7 @@ public:
     VkQueue& GetGraphicsQueue() { return _graphicsQueue; }
     void IncrementFrameNumber() { _frameNumber++; }
     VkFormat& GetFormat() {return _swapchainImageFormat;}
+    GPUMeshBuffers UploadMesh(std::span<uint32_t> indices, std::span<Vertex> vertices);
 
     DeleteQueue _mainDeletionQueue;
     VmaAllocator _allocator;
