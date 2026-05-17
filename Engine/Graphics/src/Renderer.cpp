@@ -6,7 +6,7 @@
 
 Renderer::Renderer(GLFWwindow* window)
     : _window(window),
-      _device(window),
+      _device(window, &_melonImgui),
       _descriptors(&_device),
       _pipelines(&_descriptors, &_device._mainDeletionQueue, &_device),
       _melonImgui(&_device, window, &_pipelines)
@@ -198,6 +198,10 @@ void Renderer::Terminate() {
 
 void Renderer::DrawDebugUI() {
     _melonImgui.DrawDebugUI();
+}
+
+void Renderer::DrawMainMenu() {
+    _melonImgui.DrawAppMainMenu();
 }
 
 void Renderer::DrawBackground(VkCommandBuffer cmd) {

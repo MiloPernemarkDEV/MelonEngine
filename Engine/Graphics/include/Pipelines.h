@@ -14,14 +14,24 @@ public:
     std::vector<ComputeEffect>& GetBackgroundEffects() { return _backgroundEffects; }
     int& GetCurrentBackgroundEffect() { return currentBackgroundEffect; }
 
+    // Compute gradient and sky
     VkPipeline _gradientPipeline = VK_NULL_HANDLE;
     VkPipeline _skyPipeline = VK_NULL_HANDLE;
     VkPipelineLayout _gradientPipelineLayout = VK_NULL_HANDLE;
+
+    // Triangle
     VkPipelineLayout _trianglePipelineLayout = VK_NULL_HANDLE;
     VkPipeline _trianglePipeline = VK_NULL_HANDLE;
 
+    // Mesh
+    VkPipelineLayout _meshPipelineLayout = VK_NULL_HANDLE;
+    VkPipeline _meshPipeline = VK_NULL_HANDLE;
+
+    GPUMeshBuffers rectangle;
+
     void Init();
 private:
+    void MeshPipeline();
     void InitBackgroundPipelines();
     void ComputePipeline();
     void TrianglePipeline();

@@ -32,14 +32,12 @@ echo [Melon] Compiling shaders...
 pushd Shaders
 
 echo.
-echo === GLSL SHADERS ===
 for %%f in (GLSL\*.vert GLSL\*.frag GLSL\*.comp) do (
     echo Compiling %%f
     glslangValidator -g -V "%%f" -o "%%f.spv"
 )
 
 echo.
-echo === HLSL SHADERS ===
 for %%f in (HLSL\*.hlsl) do (
     echo Compiling %%f
     dxc -T cs_6_0 -E CSmain -spirv -Zi -Qembed_debug "%%f" -Fo "%%f.spv"

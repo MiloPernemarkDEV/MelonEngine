@@ -3,6 +3,7 @@
 
 #include <vulkan\vulkan.h>
 #include <Device.h>
+#include <functional>
 
 namespace rutil {
     // Images
@@ -27,6 +28,8 @@ namespace rutil {
 
 
     VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo();
+    void GlobalImmediateSubmit(std::function<void(VkCommandBuffer cmd)> func);
+
 
     bool LoadShaderModule(const char* filename, VkDevice device,
     VkShaderModule* outShaderModule);

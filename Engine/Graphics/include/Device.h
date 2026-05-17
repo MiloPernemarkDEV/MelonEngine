@@ -11,11 +11,13 @@
 #include "vk_mem_alloc.h"
 #include "Descriptors.h"
 
+class MelonImGui;
+
 constexpr unsigned int FRAMES_IN_FLIGHT = 2;
 
 class Device {
 public:
-    Device(GLFWwindow* window);
+    Device(GLFWwindow* window, MelonImGui* melonImgui);
     void Init();
     void Cleanup();
     FrameData& GetCurrentFrame() { return _frameData[_frameNumber % FRAMES_IN_FLIGHT]; }
@@ -29,8 +31,9 @@ public:
     VkQueue& GetGraphicsQueue() { return _graphicsQueue; }
     void IncrementFrameNumber() { _frameNumber++; }
     VkFormat& GetFormat() {return _swapchainImageFormat;}
-    GPUMeshBuffers UploadMesh(std::span<uint32_t> indices, std::span<Vertex> vertices);
+    GPUMeshBuffers UploadMesh(std::span<uint32_t> indices, std::span<Vertex> vertices, VkDevice device);
 
+    MelonImGui* _melonImgui = nullptr;
     DeleteQueue _mainDeletionQueue;
     VmaAllocator _allocator;
     AllocatedImage& GetDrawImage() { return _drawImage; }

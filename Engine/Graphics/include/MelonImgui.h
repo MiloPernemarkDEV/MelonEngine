@@ -17,6 +17,7 @@ public:
     void Draw(VkCommandBuffer cmd, VkImageView targetImageView);
     void DrawDebugUI();
     void SetImGuiStyleConfig();
+    void DrawAppMainMenu();
 
     Device* _device;
     MelonImguiObjects* _uiSyncObjects;
@@ -25,7 +26,7 @@ public:
 private:
     std::vector<ComputeEffect*> _computeEffects;
     float _alpha = 1.0f;
-    bool bStyleDark_ = true;
+    bool bStyleDark_ = false;
 };
 
 #endif //MELONENGINE_MELONIMGUI_H

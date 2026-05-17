@@ -1,13 +1,7 @@
 #include "Buffer.h"
 #include "RenderDefines.h"
 
-Buffer::Buffer(Device* device)
-    : _device(device)
-{
-
-}
-
-AllocatedBuffer Buffer::Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) const {
+AllocatedBuffer Buffer::Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage, Device* device) {
     VkBufferCreateInfo bufferInfo = {};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.pNext = nullptr;
@@ -22,7 +16,7 @@ AllocatedBuffer Buffer::Create(size_t allocationSize, VkBufferUsageFlags usage, 
     AllocatedBuffer newBuffer{};
 
     VK_CHECK(vmaCreateBuffer(
-        _device->_allocator,
+        device->_allocator,
         &bufferInfo,
         &vmaAllocInfo,
         &newBuffer.buffer,
@@ -33,6 +27,8 @@ AllocatedBuffer Buffer::Create(size_t allocationSize, VkBufferUsageFlags usage, 
     return newBuffer;
 }
 
-void Buffer::Destroy(const AllocatedBuffer &buffer) const {
-    vmaDestroyBuffer(_device->_allocator, buffer.buffer, buffer.allocation);
+void Buffer::Destroy(VmaAllocator allocator, const AllocatedBuffer &buffer) {
+    vmaDestroyBuffer(allocator, buffer.buffer, buffer.allocation);
 }
+
+

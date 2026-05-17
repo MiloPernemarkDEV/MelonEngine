@@ -8,9 +8,8 @@
 
 class Buffer {
 public:
-    Buffer(Device* device);
-    static AllocatedBuffer Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) const;
-    void Destroy(const AllocatedBuffer& buffer) const;
+    static AllocatedBuffer Create(size_t allocationSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage, Device* device);
+    static void Destroy(VmaAllocator allocator, const AllocatedBuffer& buffer);
 private:
     Device* _device;
 };

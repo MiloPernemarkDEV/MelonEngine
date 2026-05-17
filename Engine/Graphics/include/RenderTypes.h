@@ -65,8 +65,8 @@ struct ComputeEffect {
 
 struct AllocatedBuffer {
     VkBuffer buffer = VK_NULL_HANDLE;
-    VmaAllocation allocation = VK_NULL_HANDLE;
-    VmaAllocationInfo info{};
+    VmaAllocation allocation;
+    VmaAllocationInfo info;
 };
 
 struct Vertex {

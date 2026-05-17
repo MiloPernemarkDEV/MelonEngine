@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RendUtil.h"
+#include "RenderDefines.h"
 
 //////////////////////////
 // Create Info Builders //

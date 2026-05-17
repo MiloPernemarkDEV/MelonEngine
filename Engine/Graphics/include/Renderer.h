@@ -16,6 +16,7 @@ public:
     bool Init();
     void Terminate();
     void DrawDebugUI();
+    void DrawMainMenu();
 private:
     void DrawBackground(VkCommandBuffer cmd);
     void DrawGeometry(VkCommandBuffer cmd);

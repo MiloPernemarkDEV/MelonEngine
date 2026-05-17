@@ -200,3 +200,36 @@ void MelonImGui::SetImGuiStyleConfig()
     }
 }
 
+void MelonImGui::DrawAppMainMenu() {
+
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("File"))
+        {
+            if (ImGui::MenuItem("Open")) {
+
+            }
+            if (ImGui::MenuItem("Save")) {
+
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Edit"))
+        {
+            if (ImGui::MenuItem("Project Settings")) {
+
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Tools"))
+        {
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+}
+

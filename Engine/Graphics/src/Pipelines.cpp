@@ -15,9 +15,55 @@ void Pipelines::Init() {
     InitBackgroundPipelines();
 }
 
+void Pipelines::MeshPipeline() {
+    VkShaderModule triangleFragShader;
+    if (!rutil::LoadShaderModule("Shaders/GLSL/colored_triangle.frag.spv", _device->GetDevice(), &triangleFragShader)) {
+        Debug::Log(LogLevel::ERROR,"Error when building the triangle fragment shader module");
+    }
+
+    VkShaderModule triangleVertexShader;
+    if (!rutil::LoadShaderModule("Shaders/GLSL/colored_triangle_mesh.vert.spv", _device->GetDevice(), &triangleVertexShader)) {
+        Debug::Log(LogLevel::ERROR,"Error when building the triangle vertex shader module");
+    }
+
+    VkPushConstantRange bufferRange{};
+    bufferRange.offset = 0;
+    bufferRange.size = sizeof(GPUDrawPushConstants);
+    bufferRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+    VkPipelineLayoutCreateInfo pipeline_layout_info = rutil::PipelineLayoutCreateInfo();
+    pipeline_layout_info.pPushConstantRanges = &bufferRange;
+    pipeline_layout_info.pushConstantRangeCount = 1;
+
+    VK_CHECK(vkCreatePipelineLayout(_device->GetDevice(), &pipeline_layout_info, nullptr, &_meshPipelineLayout));
+
+    PipelineBuilder pipelineBuilder;
+    pipelineBuilder._pipelineLayout = _meshPipelineLayout;
+    pipelineBuilder.SetShaders(triangleVertexShader, triangleFragShader);
+    pipelineBuilder.SetInputTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+    pipelineBuilder.SetPolygonMode(VK_POLYGON_MODE_FILL);
+    pipelineBuilder.SetCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
+    pipelineBuilder.SetMultisamplingModeNone();
+    pipelineBuilder.DisableBlending();
+
+    pipelineBuilder.DisableDepthTest();
+
+    //connect the image format we will draw into, from draw image
+    pipelineBuilder.SetColorAttachmentFormat(_device->_drawImage.imageFormat);
+    pipelineBuilder.SetDepthFormat(VK_FORMAT_UNDEFINED);
+
+    //finally build the pipeline
+    _meshPipeline = pipelineBuilder.BuildPipeline(_device->GetDevice());
+
+    //clean structures
+    vkDestroyShaderModule(_device->GetDevice(), triangleFragShader, nullptr);
+    vkDestroyShaderModule(_device->GetDevice(), triangleVertexShader, nullptr);
+}
+
 void Pipelines::InitBackgroundPipelines() {
     ComputePipeline();
     TrianglePipeline();
+    MeshPipeline();
 
     _mainDeletionQueue->PushFunction([&]() {
         vkDestroyPipelineLayout(_device->GetDevice(), _gradientPipelineLayout, nullptr);
@@ -25,6 +71,8 @@ void Pipelines::InitBackgroundPipelines() {
         vkDestroyPipeline(_device->GetDevice(), _skyPipeline, nullptr);
         vkDestroyPipelineLayout(_device->GetDevice(), _trianglePipelineLayout, nullptr);
         vkDestroyPipeline(_device->GetDevice(), _trianglePipeline, nullptr);
+        vkDestroyPipelineLayout(_device->GetDevice(), _meshPipelineLayout, nullptr);
+        vkDestroyPipeline(_device->GetDevice(), _meshPipeline, nullptr);
     });
 }
 

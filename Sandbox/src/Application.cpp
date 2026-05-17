@@ -34,6 +34,7 @@ void Application::Run() const {
         ImGui::NewFrame();
 
         renderer->DrawDebugUI();
+        renderer->DrawMainMenu();
 
         ImGui::Render();
 
