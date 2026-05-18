@@ -1,4 +1,4 @@
-#include "ArenaAlloc.h"
+#include "../../Engine/core/ArenaAlloc.h"
 #include "Application.h"
 #include <stdexcept>
 #include <iostream>
@@ -7,7 +7,7 @@ int main() {
     ArenaAlloc globalMemory(400 * 1024 * 1024);
     auto* app = globalMemory.add<Application>(&globalMemory);
 
-    if (!app->Init()) {
+    if (!app->init()) {
         return EXIT_FAILURE;
     }
 
@@ -18,7 +18,7 @@ int main() {
         std::cerr << e.what() << std::endl;
     }
 
-    app->Terminate();
-    globalMemory.Release();
+    app->terminate();
+    globalMemory.free();
     return EXIT_SUCCESS;
 }

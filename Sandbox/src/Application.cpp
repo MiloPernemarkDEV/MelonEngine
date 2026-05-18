@@ -1,7 +1,7 @@
 #include "Application.h"
 #include <chrono>
 #include <thread>
-#include "MelonImGui.h"
+#include "../../Engine/ui/MelonImGui.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
@@ -12,20 +12,20 @@ Application::Application(ArenaAlloc* globalArena)
     windowSystem = persistentArena->add<WindowSystem>();
 }
 
-bool Application::Init() {
-    if (!windowSystem->Init()) { return false; }
+bool Application::init() {
+    if (!windowSystem->init()) { return false; }
 
     renderer = persistentArena->add<Renderer>(windowSystem->window);
-    if (!renderer->Init()) { return false; }
+    if (!renderer->init()) { return false; }
 
     return true;
 }
 
-void Application::Run() const {
+void Application::Run() {
 
-    while (!windowSystem->WindowShouldClose()) {
+    while (!windowSystem->window_should_close()) {
 
-        windowSystem->PollForEvents();
+        windowSystem->poll_for_events();
 
         //todo if rendering stop put thread to sleep
 
@@ -33,18 +33,17 @@ void Application::Run() const {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        renderer->DrawDebugUI();
-        renderer->DrawMainMenu();
+        renderer->draw_editor_windows();
 
         ImGui::Render();
 
-        renderer->Draw();
-
-        windowSystem->SwapBuffers();
+        renderer->draw_frame();
+        windowSystem->swap_buffers();
     }
 }
 
-void Application::Terminate() const {
-    windowSystem->Terminate();
-    renderer->Terminate();
+void Application::terminate() {
+    windowSystem->terminate();
+    renderer->terminate();
 }
+

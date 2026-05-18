@@ -1,18 +1,19 @@
 #ifndef MELONENGINE_APPLICATION_H
 #define MELONENGINE_APPLICATION_H
 
-#include "WindowSystem.h"
-#include "Renderer.h"
-#include "ArenaAlloc.h"
+#include "../../Engine/core/WindowSystem.h"
+#include "../../Engine/graphics/Renderer.h"
+#include "../../Engine/core/ArenaAlloc.h"
 
 class Application {
 public:
     explicit Application(ArenaAlloc* globalArena);
 
-    bool Init();
-    void Run() const;
-    void Terminate() const;
+    bool init();
+    void Run();
+    void terminate();
 private:
+    bool show_tools = true;
     Renderer* renderer = nullptr;
     ArenaAlloc* persistentArena;
     WindowSystem* windowSystem;

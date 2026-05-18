@@ -31,6 +31,14 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(imgui)
+
+FetchContent_Declare(
+        fastgltf
+        GIT_REPOSITORY https://github.com/spnda/fastgltf.git
+        GIT_TAG v0.9.0
+)
+
+FetchContent_MakeAvailable(fastgltf)
 #### DEPENDENCY FETCHING END ####
 
 add_subdirectory(Vendor)
