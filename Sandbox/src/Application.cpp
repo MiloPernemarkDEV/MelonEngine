@@ -3,6 +3,11 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
 
+// Test is_pressed()
+#include "Input.h"
+#include "UIConfig.h"
+#include "Debug.h"
+
 Application::Application(ArenaAlloc* globalArena)
     : persistentArena(globalArena)
 {
@@ -22,6 +27,18 @@ void Application::Run() {
 
     while (!windowSystem->window_should_close()) {
         windowSystem->poll_for_events();
+
+        if (!ui::styleDarkMode) {
+            if (Input::is_pressed(windowSystem->window, Keycode::KEY_Q)) {
+                ui::styleDarkMode = true;
+                std::cout << "STYLE MODE : " << ui::styleDarkMode << "\n";
+            }
+        }
+        else
+            if (Input::is_pressed(windowSystem->window, Keycode::KEY_Q)) {
+            ui::styleDarkMode = false;
+                std::cout << "STYLE MODE : " << ui::styleDarkMode << "\n";
+        }
 
         //todo if rendering stop put thread to sleep
 

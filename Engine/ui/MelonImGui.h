@@ -45,8 +45,7 @@ private:
     void set_window_state(const std::string&, bool value) const;
     std::vector<ComputeEffect*> _computeEffects;
     inline static std::unordered_map<std::string, std::function<void()>> editor_window_uis;
-    float _alpha = 1.0f;
-    bool _styleDark = false;
+    float alpha = 1.0f;
 
     static void open_window(const char* id) ;
 

@@ -10,7 +10,12 @@ namespace ui
     constexpr auto g_kChromeBg = ImVec4(0.96f, 0.96f, 0.96f, 1.00f);
     constexpr auto g_kChromeActive = ImVec4(0.82f, 0.82f, 0.82f, 1.00f);
     constexpr auto kAccent = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    constexpr auto kDockPreview = ImVec4(0.75f, 0.75f, 0.75f, 0.55f);
+    constexpr auto kDockSplitterHover = ImVec4(0.65f, 0.65f, 0.65f, 0.85f);
+    constexpr auto kDockSplitterActive = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     constexpr int g_kWindowChromeColorCount = 7;
+
+    inline static bool styleDarkMode = false;
 
     inline void apply_neutral_window_chrome(ImVec4* colors)
     {
@@ -31,13 +36,15 @@ namespace ui
         apply_neutral_window_chrome(colors);
 
         colors[ImGuiCol_Separator] = colors[ImGuiCol_Border];
-        colors[ImGuiCol_SeparatorHovered] = colors[ImGuiCol_HeaderHovered];
-        colors[ImGuiCol_SeparatorActive] = colors[ImGuiCol_HeaderActive];
+        colors[ImGuiCol_SeparatorHovered] = kDockSplitterHover;
+        colors[ImGuiCol_SeparatorActive] = kDockSplitterActive;
         colors[ImGuiCol_CheckboxSelectedBg] = ImLerp(colors[ImGuiCol_FrameBg], colors[ImGuiCol_FrameBgHovered], 0.65f);
-        colors[ImGuiCol_DockingPreview] = ImVec4(kAccent.x, kAccent.y, kAccent.z, kAccent.w * 0.70f);
+        colors[ImGuiCol_DockingPreview] = kDockPreview;
         colors[ImGuiCol_DockingEmptyBg] = colors[ImGuiCol_WindowBg];
         colors[ImGuiCol_TreeLines] = colors[ImGuiCol_Border];
-        colors[ImGuiCol_DragDropTarget] = ImVec4(kAccent.x, kAccent.y, kAccent.z, 0.95f);
+        colors[ImGuiCol_DragDropTarget] = kDockSplitterActive;
+        colors[ImGuiCol_DragDropTargetBg] = ImVec4(kDockPreview.x, kDockPreview.y, kDockPreview.z, 0.25f);
+        colors[ImGuiCol_NavWindowingHighlight] = kDockSplitterHover;
         colors[ImGuiCol_NavCursor] = colors[ImGuiCol_HeaderHovered];
     }
 

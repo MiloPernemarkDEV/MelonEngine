@@ -35,6 +35,7 @@ add_library(Engine STATIC
         graphics/Pipelines.h
         ui/MelonImGui.h
         ui/MelonImgui.cpp
+        ui/UIConfig.h
         graphics/PipelineBuilder.h
         graphics/PipelineBuilder.cpp
         graphics/Buffer.cpp
@@ -42,7 +43,9 @@ add_library(Engine STATIC
         ui/TilemapEditorUi.h
         core/Tilemap.cpp
         core/Tilemap.h
+        core/Keycode.h
         ui/ProjectSettingsUi.cpp
+        core/Input.cpp
 )
 
 # todo: add WindowSystem

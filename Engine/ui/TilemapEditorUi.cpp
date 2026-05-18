@@ -1,6 +1,6 @@
 #include "TilemapEditorUi.h"
 #include "MelonImGui.h"
-#include "uicfg.h"
+#include "UIConfig.h"
 
 // the tilemap editor should display the spritesheet and the available assets
 // functionality include: moving assets into a tile, see a spritesheet, preview of assets

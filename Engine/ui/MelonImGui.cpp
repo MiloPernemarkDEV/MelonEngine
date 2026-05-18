@@ -7,7 +7,7 @@
 #include "RendUtil.h"
 #include "RenderDefines.h"
 #include "TilemapEditorUi.h"
-#include "uicfg.h"
+#include "UIConfig.h"
 
 ui::window::window(const char *title, bool* p_open, const ImGuiWindowFlags flags)
     : open(ImGui::Begin(title, p_open, flags))
@@ -83,7 +83,7 @@ void MelonImGui::Init() const {
         vkDestroyDescriptorPool(_device->GetDevice(), imguiPool, nullptr);
     });
 
-    ui::init_imgui_styles(_styleDark, _alpha);
+    ui::init_imgui_styles(ui::styleDarkMode, alpha);
 
     add_window("Tilemap Editor", []() {
         ui::draw_tilemap_editor_ui("Tilemap Editor");

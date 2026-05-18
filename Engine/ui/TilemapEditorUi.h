@@ -1,8 +1,8 @@
 #ifndef MELONENGINE_TILEMAP_EDITOR_UI_H
 #define MELONENGINE_TILEMAP_EDITOR_UI_H
 
-
 #include "MelonImGui.h"
+#include "Tilemap.h"
 
 namespace ui {
     void draw_tilemap_editor_ui(const char* title);

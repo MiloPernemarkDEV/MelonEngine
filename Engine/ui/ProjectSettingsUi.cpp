@@ -9,7 +9,7 @@ void ui::draw_project_settings_ui(const char *title) {
     // project settings:
     // VSYNC
     // FPS LIMIT
-    // Dark / Light Mode 
+    // Dark / Light Mode
     if (const ui::window projectSettings(title, &isOpen); projectSettings) {
 
     }
