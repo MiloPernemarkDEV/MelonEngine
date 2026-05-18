@@ -1,7 +1,4 @@
 #include "Application.h"
-#include <chrono>
-#include <thread>
-#include "../../Engine/ui/MelonImGui.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
@@ -24,7 +21,6 @@ bool Application::init() {
 void Application::Run() {
 
     while (!windowSystem->window_should_close()) {
-
         windowSystem->poll_for_events();
 
         //todo if rendering stop put thread to sleep
@@ -32,6 +28,11 @@ void Application::Run() {
         ImGui_ImplVulkan_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // Docking only: passthru central node + transparent host bg so the scene shows through.
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+        ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+        ImGui::PopStyleColor();
 
         renderer->draw_editor_windows();
 

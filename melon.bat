@@ -22,7 +22,9 @@ exit /b
 
 
 :configure
+echo [Melon] Configuring CMake...
 cmake -S . -B %BUILD_DIR%
+if %errorlevel% neq 0 exit /b %errorlevel%
 exit /b
 
 
@@ -32,15 +34,25 @@ echo [Melon] Compiling shaders...
 pushd Shaders
 
 echo.
+
 for %%f in (GLSL\*.vert GLSL\*.frag GLSL\*.comp) do (
     echo Compiling %%f
     glslangValidator -g -V "%%f" -o "%%f.spv"
+    if %errorlevel% neq 0 (
+        popd
+        exit /b %errorlevel%
+    )
 )
 
 echo.
+
 for %%f in (HLSL\*.hlsl) do (
     echo Compiling %%f
     dxc -T cs_6_0 -E CSmain -spirv -Zi -Qembed_debug "%%f" -Fo "%%f.spv"
+    if %errorlevel% neq 0 (
+        popd
+        exit /b %errorlevel%
+    )
 )
 
 popd
@@ -51,9 +63,17 @@ exit /b
 
 :check
 echo [Melon] Checking (%CONFIG%)...
+
 call :shaders
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 call :configure
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 cmake --build %BUILD_DIR% --config %CONFIG%
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+echo [Melon] Build OK.
 exit /b
 
 
@@ -61,18 +81,23 @@ exit /b
 echo [Melon] Building (%CONFIG%)...
 
 call :shaders
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 call :configure
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 cmake --build %BUILD_DIR% --config %CONFIG%
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo.
 echo [Melon] Running Sandbox (%CONFIG%)...
 %BUILD_DIR%\Sandbox\%CONFIG%\Sandbox.exe
+
 exit /b
 
 
 :run
-echo [Melon] Running Debug...
+echo [Melon] Running (%CONFIG%)...
 %BUILD_DIR%\Sandbox\Debug\Sandbox.exe
 exit /b
 
@@ -80,4 +105,5 @@ exit /b
 :clean
 echo [Melon] Cleaning build folder...
 rmdir /s /q %BUILD_DIR%
+echo [Melon] Clean complete.
 exit /b

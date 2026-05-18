@@ -135,9 +135,9 @@ void Renderer::terminate() {
 }
 
 void Renderer::draw_editor_windows() {
-    _melonImgui.draw_debug_ui();
-    _melonImgui.draw_app_top_menu();
-    ui::draw_tilemap_editor_ui("Tilemap");
+    _melonImgui.draw_debug_ui("Compute Backgrounds");
+    _melonImgui.draw_top_menu();
+    ui::draw_tilemap_editor_ui("Tilemap Editor");
 }
 
 void Renderer::DrawBackground(VkCommandBuffer cmd) {

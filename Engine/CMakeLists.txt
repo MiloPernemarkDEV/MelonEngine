@@ -1,18 +1,18 @@
 set(IMGUI_DIR ${imgui_SOURCE_DIR})
 
 add_library(imgui STATIC
-        ${IMGUI_DIR}/imgui.cpp
-        ${IMGUI_DIR}/imgui_draw.cpp
-        ${IMGUI_DIR}/imgui_tables.cpp
-        ${IMGUI_DIR}/imgui_widgets.cpp
-        ${IMGUI_DIR}/imgui_demo.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/imgui.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/imgui_draw.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/imgui_tables.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/imgui_widgets.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/imgui_demo.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends/imgui_impl_vulkan.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends/imgui_impl_glfw.cpp
 )
 
 target_include_directories(imgui PUBLIC
-        ${IMGUI_DIR}
-        ${IMGUI_DIR}/backends
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends
         ${CMAKE_SOURCE_DIR}/Vendor/include
 )
 
@@ -42,6 +42,7 @@ add_library(Engine STATIC
         ui/TilemapEditorUi.h
         core/Tilemap.cpp
         core/Tilemap.h
+        ui/ProjectSettingsUi.cpp
 )
 
 # todo: add WindowSystem
@@ -67,6 +68,7 @@ target_include_directories(Engine PUBLIC
         ${CMAKE_SOURCE_DIR}/Vendor/include
         ${CMAKE_SOURCE_DIR}/Vendor/assimp/include
         ${vma_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/
 )
 
 target_link_directories(Engine PUBLIC

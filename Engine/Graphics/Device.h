@@ -30,6 +30,7 @@ public:
     std::vector<VkImage>& GetSwapchainImages() { return _swapchainImages; }
     unsigned int& GetFrameNumber() { return _frameNumber; }
     VkQueue& GetGraphicsQueue() { return _graphicsQueue; }
+    uint32_t GetGraphicsQueueFamily() const { return _graphicsQueueFamily; }
     void IncrementFrameNumber() { _frameNumber++; }
     VkFormat& GetFormat() {return _swapchainImageFormat;}
     GPUMeshBuffers UploadMesh(std::span<const uint32_t> indices, std::span<const Vertex> vertices);
