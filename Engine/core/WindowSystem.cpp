@@ -45,7 +45,7 @@ auto WindowSystem::SetupContext() const -> void {
 }
 
 auto WindowSystem::createWindowIcon(const char* filename) const -> void {
-    auto [data] = AppIcon::CreateIcon(filename);
+    auto [data] = AppIcon::create_icon(filename);
     GLFWimage images[1];
     images[0].pixels = data.pixels;
     images[0].width = data.x;

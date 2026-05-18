@@ -51,7 +51,6 @@ target_sources(Engine PRIVATE
         core/Debug.cpp
         core/WindowSystem.cpp
         core/AppIcon.cpp
-        core/AssetSystem.cpp
         core/RuntimeAssert.cpp
         graphics/Device.cpp
         graphics/Renderer.cpp
