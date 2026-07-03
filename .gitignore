@@ -90,3 +90,6 @@ Engine/*.exe
 Vendor/assimp
 .vscode/
 *.spv
+
+
+rust/target/
