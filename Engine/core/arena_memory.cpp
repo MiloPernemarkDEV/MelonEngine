@@ -1,13 +1,13 @@
 #include "pch.h"
-#include "ArenaAlloc.h"
+#include "arena_memory.h"
 
-ArenaAlloc::ArenaAlloc(const std::size_t size)
+Arena::Arena(const std::size_t size)
     : totalSize(size), offset(0)
 {
     buffer = static_cast<char*>(::operator new(totalSize));
 }
 
-void ArenaAlloc::free() {
+void Arena::free() {
     if (buffer) {
         ::operator delete(buffer);
         totalSize = 0;

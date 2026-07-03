@@ -1,7 +1,7 @@
-#ifndef MELONENGINE_VEC4F_H
-#define MELONENGINE_VEC4F_H
+#ifndef MELON_VEC4F_H
+#define MELON_VEC4F_H
 
-#include "MathDefines.h"
+#include "math_defines.h"
 #include <cmath>
 #include <algorithm>
 #include "mat4.h"
@@ -23,6 +23,6 @@ struct vec4f {
 	}
 };
 
-#endif // MELONENGINE_VEC4F_H
+#endif // MELON_VEC4F_H
 
 

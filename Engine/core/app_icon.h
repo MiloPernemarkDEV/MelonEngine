@@ -1,5 +1,5 @@
-#ifndef MELONENGINE_IMAGEUTIL_H
-#define MELONENGINE_IMAGEUTIL_H
+#ifndef MELON_APP_ICON_H
+#define MELON_APP_ICON_H
 
 struct ImageData {
     int x = 0;
@@ -23,4 +23,4 @@ public:
 private:
 };
 
-#endif //MELONENGINE_IMAGEUTIL_H
+#endif MELON_APP_ICON_H

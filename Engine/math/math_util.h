@@ -1,7 +1,7 @@
-#ifndef MELONENGINE_MATH_UTIL_H
-#define MELONENGINE_MATH_UTIL_H
+#ifndef MELON_MATH_UTIL_H
+#define MELON_MATH_UTIL_H
 
-#include "MathDefines.h"
+#include "math_defines.h"
 #include <cmath>
 #include "vec3f.h"
 
@@ -42,7 +42,7 @@ MELON_INLINE static float dot(const vec3f& a, const vec3f& b) noexcept
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-#endif // MELONENGINE_MATH_UTIL_H
+#endif // MELON_MATH_UTIL_H
 
 
 

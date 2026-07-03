@@ -1,19 +1,15 @@
-//
-// Created by milos on 2026-05-08.
-//
-
-#ifndef MELONENGINE_ARENAALLOC_H
-#define MELONENGINE_ARENAALLOC_H
+#ifndef MELON_ARENA_MEMORY_H
+#define MELON_ARENA_MEMORY_H
 
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
 
-class ArenaAlloc {
+class Arena {
 public:
-    explicit ArenaAlloc(std::size_t size);
-    ~ArenaAlloc() = default;
-    ArenaAlloc(const ArenaAlloc&) = default;
+    explicit Arena(std::size_t size);
+    ~Arena() = default;
+    Arena(const Arena&) = default;
 
     void free();
 
@@ -47,4 +43,4 @@ private:
 };
 
 
-#endif //MELONENGINE_ARENAALLOC_H
+#endif // MELON_ARENA_MEMORY_H

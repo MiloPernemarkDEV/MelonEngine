@@ -1,7 +1,7 @@
 #ifndef MELON_PROJECTION_H
 #define MELON_PROJECTION_H
 
-#include "MathDefines.h"
+#include "math_defines.h"
 #include "mat4.h"
 
 // Projects a 3D point onto the axis by zeroing out the other axes

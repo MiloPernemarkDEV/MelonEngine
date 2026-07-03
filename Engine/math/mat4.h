@@ -1,14 +1,13 @@
-#ifndef MELONENGINE_MAT4X4_H
-#define MELONENGINE_MAT4X4_H
+#ifndef MELON_MAT4X4_H
+#define MELON_MAT4X4_H
 
 #include <cmath>
 #include <ostream>
-#include "MathDefines.h"
-#include "MathUtil.h"
+#include "math_defines.h"
+#include "math_util.h"
 #include "vec2f.h"
 #include "vec3f.h"
 #include <glm/mat4x4.hpp>
-#include "../core/RuntimeAssert.h"
 
 
 struct mat4 {
@@ -244,5 +243,5 @@ MELON_INLINE mat4 operator*(const float s, const mat4& m) noexcept
 
 std::ostream& operator<<(std::ostream& out_stream, const mat4& a);
 
-#endif // MELONENGINE_MAT4X4_H
+#endif // MELON_MAT4X4_H
 

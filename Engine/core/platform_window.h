@@ -4,15 +4,15 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-class WindowSystem {
+class PlatformWindow {
 public:
-    WindowSystem();
-    ~WindowSystem() = default;
+    PlatformWindow();
+    ~PlatformWindow() = default;
 
-    WindowSystem(WindowSystem&) = delete;
-    WindowSystem& operator=(WindowSystem&) = delete;
+    PlatformWindow(PlatformWindow&) = delete;
+    PlatformWindow& operator=(PlatformWindow&) = delete;
 
-    WindowSystem(WindowSystem&&) noexcept = default;
+    PlatformWindow(PlatformWindow&&) noexcept = default;
 
     bool init();
     bool window_should_close() const;

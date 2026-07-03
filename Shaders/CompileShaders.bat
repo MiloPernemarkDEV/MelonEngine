@@ -1,24 +1,27 @@
 @echo off
+setlocal enabledelayedexpansion
 
-echo =========================
-echo Compiling GLSL shaders...
-echo =========================
-
+echo ========================================
+echo [Melon] Compiling GLSL shaders...
+echo ========================================
 for %%f in (GLSL\*.vert GLSL\*.frag GLSL\*.comp) do (
-    echo Compiling %%f
-    glslangValidator -V "%%f" -o "%%f.spv"
+    if exist "%%f" (
+        echo Compiling %%f
+        glslangValidator -V "%%f" -o "%%f.spv"
+    )
 )
 
 echo.
-echo =========================
-echo Compiling HLSL shaders...
-echo =========================
-
+echo ========================================
+echo [Melon] Compiling HLSL shaders...
+echo ========================================
 for %%f in (HLSL\*.hlsl) do (
-    echo Compiling %%f
-    dxc -T cs_6_0 -E CSmain -spirv "%%f" -Fo "%%f.spv"
+    if exist "%%f" (
+        echo Compiling %%f
+        dxc -T cs_6_0 -E CSmain -spirv "%%f" -Fo "%%f.spv"
+    )
 )
 
 echo.
-echo Done.
+echo [Melon] Shader processing done.
 pause

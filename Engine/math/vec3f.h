@@ -1,7 +1,7 @@
-#ifndef MELONENGINE_VEC3F_H
-#define MELONENGINE_VEC3F_H
+#ifndef MELON_VEC3F_H
+#define MELON_VEC3F_H
 
-#include "MathDefines.h"
+#include "math_defines.h"
 #include <cmath>
 #include <algorithm>
 #include <cfloat>
@@ -205,6 +205,6 @@ MELON_INLINE vec3f operator*(const float s, const vec3f& v)
 	return v * s;
 }
 
-#endif // MELONENGINE_VEC3F_H
+#endif // MELON_VEC3F_H
 
 

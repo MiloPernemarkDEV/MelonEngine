@@ -1,5 +1,5 @@
-#ifndef MELONENGINE_MATH_DEFINES_H
-#define MELONENGINE_MATH_DEFINES_H
+#ifndef MELON_MATH_DEFINES_H
+#define MELON_MATH_DEFINES_H
 
 #if defined(_MSC_VER)
     #define MELON_INLINE __forceinline
@@ -9,4 +9,4 @@
     #define MELON_INLINE inline
 #endif
 
-#endif // MELONENGINE_MATH_DEFINES_H
+#endif // MELON_MATH_DEFINES_H

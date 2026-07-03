@@ -1,7 +1,7 @@
 #include "pch.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
-#include <AppIcon.h>
+#include <app_icon.h>
 
 auto AppIcon::load_icon_data(Icon& icon, const char* filename) -> void {
     icon.data.filename = filename;

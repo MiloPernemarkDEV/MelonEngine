@@ -1,0 +1,12 @@
+[package]
+name = "renderer"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "renderer"
+crate-type = ["staticlib"] # forces cargo to output the project as a static library
+
+[dependencies]
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

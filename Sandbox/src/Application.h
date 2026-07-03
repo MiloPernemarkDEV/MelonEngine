@@ -1,23 +1,20 @@
-#ifndef MELONENGINE_APPLICATION_H
-#define MELONENGINE_APPLICATION_H
+#ifndef MELON_APPLICATION_H
+#define MELON_APPLICATION_H
 
-#include "../../Engine/core/WindowSystem.h"
-#include "../../Engine/graphics/Renderer.h"
-#include "../../Engine/core/ArenaAlloc.h"
+#include "../../Engine/core/platform_window.h"
+#include "../../Engine/core/arena_memory.h"
 
 class Application {
 public:
-    explicit Application(ArenaAlloc* globalArena);
+    explicit Application(Arena* globalArena);
 
     bool init();
     void Run();
     void terminate();
 private:
-    bool show_tools = true;
-    Renderer* renderer = nullptr;
-    ArenaAlloc* persistentArena;
-    WindowSystem* windowSystem;
+    Arena* persistentArena = nullptr;
+    PlatformWindow* platformWindow;
 };
 
 
-#endif //MELONENGINE_APPLICATION_H
+#endif // MELON_APPLICATION_H

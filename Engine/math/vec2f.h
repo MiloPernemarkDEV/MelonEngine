@@ -1,11 +1,10 @@
-#ifndef MELONENGINE_VEC2F_H
-#define MELONENGINE_VEC2F_H
+#ifndef MELON_VEC2F_H
+#define MELON_VEC2F_H
 
+#include "math_defines.h"
 #include <cmath>
 #include <algorithm>
 #include <cfloat>
-
-#include "MathDefines.h"
 
 
 struct vec2f
@@ -160,6 +159,6 @@ MELON_INLINE vec2f operator*(const float& s, const vec2f& v)
 	return v * s;
 }
 
-#endif // MELONENGINE_VEC2F_H
+#endif // MELON_VEC2F_H
 
 

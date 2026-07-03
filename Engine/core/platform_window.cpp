@@ -1,20 +1,20 @@
 #include "pch.h"
-#include "WindowSystem.h"
-#include "AppIcon.h"
+#include "app_icon.h"
+#include "platform_window.h"
+#include "logger.h"
+#include <filesystem>
 
-WindowSystem::WindowSystem()
+PlatformWindow::PlatformWindow()
     : window(nullptr), WINDOW_X(1400), WINDOW_Y(980), APP_NAME("MelonEngine | Vulkan 1.3.1")
 {
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
-// @Todo refactor path from hardcoding my own path
-bool WindowSystem::init() {
-    std::filesystem::current_path("C:/msys64/home/milos/dev/C++/MelonEngine");
+bool PlatformWindow::init() {
+    std::filesystem::current_path("C:/dev/melon_engine");
     glfwInit();
     SetupContext();
     window = glfwCreateWindow(WINDOW_X, WINDOW_Y, APP_NAME, nullptr, nullptr);
-    createWindowIcon("Assets/Icons/melonengine.png");
+    ME_LOG(Info, "Created glfw window, width {0}, height {1}, name {2}", WINDOW_X, WINDOW_Y, APP_NAME);
 
     glfwMakeContextCurrent(window);
 
@@ -22,29 +22,28 @@ bool WindowSystem::init() {
     return true;
 }
 
-bool WindowSystem::window_should_close() const {
+bool PlatformWindow::window_should_close() const {
     return glfwWindowShouldClose(window);
 }
 
-void WindowSystem::swap_buffers() const {
+void PlatformWindow::swap_buffers() const {
     glfwSwapBuffers(window);
 }
 
-void WindowSystem::poll_for_events() const {
+void PlatformWindow::poll_for_events() const {
     glfwPollEvents();
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
-void WindowSystem::terminate() {
+void PlatformWindow::terminate() {
     glfwTerminate();
 }
 
-auto WindowSystem::SetupContext() const -> void {
+auto PlatformWindow::SetupContext() const -> void {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 }
 
-auto WindowSystem::createWindowIcon(const char* filename) const -> void {
+auto PlatformWindow::createWindowIcon(const char* filename) const -> void {
     auto [data] = AppIcon::create_icon(filename);
     GLFWimage images[1];
     images[0].pixels = data.pixels;

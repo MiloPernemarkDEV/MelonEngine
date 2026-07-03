@@ -1,7 +1,7 @@
-#ifndef MELONENGINE_MAT3X3_H
-#define MELONENGINE_MAT3X3_H
+#ifndef MELON_MAT3X3_H
+#define MELON_MAT3X3_H
 
-#include "MathDefines.h"
+#include "math_defines.h"
 #include "Mat4.h"
 
 struct mat3 {
@@ -31,6 +31,6 @@ struct mat3 {
 	}
 };
 
-#endif // MELONENGINE_MAT3X3_H
+#endif // MELON_MAT3X3_H
 
 

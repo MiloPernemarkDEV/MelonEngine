@@ -1,10 +1,10 @@
-#include "../../Engine/core/ArenaAlloc.h"
-#include "Application.h"
+#include "../../Engine/core/arena_memory.h"
+#include "application.h"
 #include <stdexcept>
 #include <iostream>
 
 int main() {
-    ArenaAlloc globalMemory(400 * 1024 * 1024);
+    Arena globalMemory(400 * 1024 * 1024);
     auto* app = globalMemory.add<Application>(&globalMemory);
 
     if (!app->init()) {

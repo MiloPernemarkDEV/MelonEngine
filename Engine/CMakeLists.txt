@@ -18,55 +18,22 @@ target_include_directories(imgui PUBLIC
 
 target_link_libraries(imgui PUBLIC
         Vulkan::Vulkan
-        glfw3
 )
 
 add_library(Engine STATIC
-        graphics/Renderer.h
-        graphics/Renderer.cpp
-        graphics/Device.h
-        graphics/Device.cpp
-        graphics/RenderDefines.h
-        graphics/RendUtil.h
-        graphics/RendUtil.cpp
         pch.h
-        graphics/RenderTypes.h
-        graphics/Descriptors.h
-        graphics/Pipelines.h
-        ui/MelonImGui.h
-        ui/MelonImgui.cpp
-        ui/UIConfig.h
-        graphics/PipelineBuilder.h
-        graphics/PipelineBuilder.cpp
-        graphics/Buffer.cpp
-        ui/TilemapEditorUi.cpp
-        ui/TilemapEditorUi.h
-        core/Tilemap.cpp
-        core/Tilemap.h
-        core/Keycode.h
-        ui/ProjectSettingsUi.cpp
-        core/Input.cpp
+        core/platform_window.cpp
+        core/arena_memory.cpp
 )
 
 # todo: add WindowSystem
 
 target_sources(Engine PRIVATE
-        core/ArenaAlloc.cpp
-        core/Debug.cpp
-        core/WindowSystem.cpp
-        core/AppIcon.cpp
-        core/RuntimeAssert.cpp
-        graphics/Device.cpp
-        graphics/Renderer.cpp
-        graphics/Descriptors.cpp
-        graphics/Pipelines.cpp
-        ui/MelonImgui.cpp
+        core/app_icon.cpp
 )
 
 target_include_directories(Engine PUBLIC
         ${CMAKE_SOURCE_DIR}/Engine/core
-        ${CMAKE_SOURCE_DIR}/Engine/graphics
-        ${CMAKE_SOURCE_DIR}/Engine/ui
         ${CMAKE_SOURCE_DIR}/Engine
         ${CMAKE_SOURCE_DIR}/Vendor/include
         ${CMAKE_SOURCE_DIR}/Vendor/assimp/include
@@ -80,9 +47,9 @@ target_link_directories(Engine PUBLIC
 
 target_link_libraries(Engine PUBLIC
         Vulkan::Vulkan
-        glfw3
         glad
-        assimp-vc145-mt.lib
+        glfw
+        assimp
         vk-bootstrap::vk-bootstrap
         imgui
         fastgltf::fastgltf
