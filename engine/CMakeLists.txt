@@ -24,9 +24,8 @@ add_library(Engine STATIC
         pch.h
         core/platform_window.cpp
         core/arena_memory.cpp
+        core/renderer.cpp       
 )
-
-# todo: add WindowSystem
 
 target_sources(Engine PRIVATE
         core/app_icon.cpp
@@ -43,6 +42,7 @@ target_include_directories(Engine PUBLIC
 
 target_link_directories(Engine PUBLIC
         ${CMAKE_SOURCE_DIR}/Vendor/lib
+        ${CMAKE_SOURCE_DIR}/rust/target/debug
 )
 
 target_link_libraries(Engine PUBLIC
@@ -53,7 +53,17 @@ target_link_libraries(Engine PUBLIC
         vk-bootstrap::vk-bootstrap
         imgui
         fastgltf::fastgltf
+        renderer
 )
+
+# Rust static libraries require native OS system dependencies to link successfully
+if(WIN32)
+        target_link_libraries(Engine PUBLIC ws2_32 userenv ntdll bcrypt)
+elseif(APPLE)
+        target_link_libraries(Engine PUBLIC "-framework Security" "-framework CoreFoundation")
+else()
+        target_link_libraries(Engine PUBLIC pthread dl m)
+endif()
 
 target_precompile_headers(Engine PUBLIC
         pch.h

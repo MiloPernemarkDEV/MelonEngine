@@ -5,7 +5,8 @@
 
 int main() {
     Arena globalMemory(400 * 1024 * 1024);
-    auto* app = globalMemory.add<Application>(&globalMemory);
+    Arena* arenaPtr = &globalMemory;
+    auto* app = globalMemory.add<Application>(arenaPtr);
 
     if (!app->init()) {
         return EXIT_FAILURE;

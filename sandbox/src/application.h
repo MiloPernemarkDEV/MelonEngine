@@ -3,6 +3,8 @@
 
 #include "../../Engine/core/platform_window.h"
 #include "../../Engine/core/arena_memory.h"
+#include "../../Engine/core/renderer.h"
+
 
 class Application {
 public:
@@ -14,6 +16,7 @@ public:
 private:
     Arena* persistentArena = nullptr;
     PlatformWindow* platformWindow;
+    Renderer* renderer;
 };
 
 

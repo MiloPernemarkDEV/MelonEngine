@@ -16,10 +16,7 @@ struct Icon {
 class AppIcon {
 public:
     static auto load_icon_data(Icon& icon, const char* filename) -> void;
-
     static auto create_icon(const char* filename) -> Icon;
-
-
 private:
 };
 
