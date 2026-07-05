@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "app_icon.h"
+#include "../public/app_icon.h"
 #include "platform_window.h"
 #include "logger.h"
 #include <filesystem>

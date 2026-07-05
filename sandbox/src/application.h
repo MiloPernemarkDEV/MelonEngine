@@ -1,10 +1,7 @@
 #ifndef MELON_APPLICATION_H
 #define MELON_APPLICATION_H
 
-#include "../../Engine/core/platform_window.h"
-#include "../../Engine/core/arena_memory.h"
-#include "../../Engine/core/renderer.h"
-
+#include "engine.h"
 
 class Application {
 public:

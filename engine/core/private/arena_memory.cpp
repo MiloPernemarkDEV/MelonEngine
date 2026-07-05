@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "arena_memory.h"
+#include "../public/arena_memory.h"
 
 Arena::Arena(const std::size_t size)
     : totalSize(size), offset(0)

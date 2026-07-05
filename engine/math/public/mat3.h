@@ -1,8 +1,8 @@
 #ifndef MELON_MAT3X3_H
 #define MELON_MAT3X3_H
 
-#include "math_defines.h"
-#include "Mat4.h"
+#include "../math_defines.h"
+#include "../Mat4.h"
 
 struct mat3 {
 	float m11, m12, m13,

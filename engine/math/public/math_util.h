@@ -3,7 +3,7 @@
 
 #include "math_defines.h"
 #include <cmath>
-#include "vec3f.h"
+#include "../vec3f.h"
 
 
 MELON_INLINE static bool isNearlyEqual(const float a, const float b, const float epsilon = 1e-5f)

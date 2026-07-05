@@ -1,7 +1,7 @@
 #include "renderer.h"
 #include <utility>
 #include <iostream>
-#include "logger.h"
+#include "../public/logger.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>

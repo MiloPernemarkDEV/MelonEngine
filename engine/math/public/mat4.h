@@ -3,10 +3,10 @@
 
 #include <cmath>
 #include <ostream>
-#include "math_defines.h"
-#include "math_util.h"
-#include "vec2f.h"
-#include "vec3f.h"
+#include "../math_defines.h"
+#include "../math_util.h"
+#include "../vec2f.h"
+#include "../vec3f.h"
 #include <glm/mat4x4.hpp>
 
 

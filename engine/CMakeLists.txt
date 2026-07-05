@@ -14,6 +14,9 @@ target_include_directories(imgui PUBLIC
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends
         ${CMAKE_SOURCE_DIR}/Vendor/include
+        ${CMAKE_SOURCE_DIR}/engine/platform/public
+        ${CMAKE_SOURCE_DIR}/engine/core/public
+        ${CMAKE_SOURCE_DIR}/engine/math/public
 )
 
 target_link_libraries(imgui PUBLIC
@@ -22,13 +25,13 @@ target_link_libraries(imgui PUBLIC
 
 add_library(Engine STATIC
         pch.h
-        core/platform_window.cpp
-        core/arena_memory.cpp
-        core/renderer.cpp       
+        core/private/platform_window.cpp
+        core/private/arena_memory.cpp
+        core/private/renderer.cpp
 )
 
 target_sources(Engine PRIVATE
-        core/app_icon.cpp
+        core/private/app_icon.cpp
 )
 
 target_include_directories(Engine PUBLIC
