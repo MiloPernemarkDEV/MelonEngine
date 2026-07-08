@@ -5,5 +5,7 @@
 #include "logger.h"
 #include "platform_window.h"
 #include "renderer.h"
+#include "types.h"
+#include "defines.h"
 
 #endif

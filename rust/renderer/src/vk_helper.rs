@@ -42,4 +42,3 @@ pub fn print_device_info(instance: &Instance, pdevice: vk::PhysicalDevice) {
         info!("  Max Bound Descriptor Sets: {}", props.limits.max_bound_descriptor_sets);
     }
 }
-

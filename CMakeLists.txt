@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 project(MelonEngine LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Optimizes FetchContent so it doesn't re-download constantly
@@ -60,6 +60,7 @@ FetchContent_Declare(
 
 # Populate all dependencies at once 
 FetchContent_MakeAvailable(vk_bootstrap VMA imgui glfw fastgltf assimp)
+find_package(Vulkan REQUIRED)
 
 # SUBDIRECTORIES
 add_subdirectory(Vendor)

@@ -1,14 +1,17 @@
 #include "renderer.h"
 #include <utility>
 #include <iostream>
-#include "../public/logger.h"
+#include "logger.h"
+#include "arena_memory.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
+#if defined (USE_RUST_RENDERER)
+
 Renderer::Renderer(uint32_t width, uint32_t height)
-    : _context(nullptr), _width(width), _height(height)
+    : _width(width), _height(height)
 {
 }
 
@@ -33,10 +36,10 @@ Renderer& Renderer::operator=(Renderer&& other) noexcept {
     return *this;
 }
 
-void Renderer::init(void* glfwWindowHandle) {
+bool Renderer::init(void* glfwWindowHandle) {
     if (!glfwWindowHandle) {
         ME_LOG(Error, "Cannot initialize renderer: Provided GLFW window handle is null.");
-        return;
+        return false;
     }
 
     GLFWwindow* window = static_cast<GLFWwindow*>(glfwWindowHandle);
@@ -49,6 +52,8 @@ void Renderer::init(void* glfwWindowHandle) {
     if (!_context) {
         ME_LOG(Error, "Failed to initialize Rust Renderer Context.");
     }
+
+    return true;
 }
 
 void Renderer::draw() {
@@ -63,3 +68,40 @@ void Renderer::terminate() {
         _context = nullptr;
     }
 }
+
+#else
+
+Renderer::Renderer(uint32_t width, uint32_t height)
+    : _width(width), _height(height)
+{
+    _vk_renderer = g_GlobalArena.add<VkRenderer>();
+}
+
+Renderer::~Renderer() {
+    _vk_renderer->terminate();
+}
+
+bool Renderer::init(void* glfwWindowHandle) {
+    if (!glfwWindowHandle) {
+        ME_LOG(Error, "Cannot initialize renderer: Provided GLFW window handle is null.");
+        return false;
+    }
+
+    GLFWwindow* window = static_cast<GLFWwindow*>(glfwWindowHandle);
+
+    if (!_vk_renderer->init()) {
+        ME_LOG(Error, "Failed to initialize Rust Renderer Context.");
+    }
+
+    return true;
+}
+
+void Renderer::draw() {
+    _vk_renderer->draw();
+}
+
+void Renderer::terminate() {
+    _vk_renderer->terminate();
+}
+#endif
+

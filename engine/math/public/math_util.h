@@ -3,16 +3,14 @@
 
 #include "math_defines.h"
 #include <cmath>
-#include "../vec3f.h"
+#include "vec3f.h"
 
 
-MELON_INLINE static bool isNearlyEqual(const float a, const float b, const float epsilon = 1e-5f)
-{
-	return std::abs(a - b) <= epsilon;
+MELON_INLINE static bool isNearlyEqual(const float a, const float b, const float epsilon = 1e-5f) {
+    return std::abs(a - b) <= epsilon;
 }
 
-MELON_INLINE static vec3f normalize(const vec3f& v) noexcept
-{
+MELON_INLINE static vec3f normalize(const vec3f& v) noexcept {
     const float length_sq = v.x * v.x + v.y * v.y + v.z * v.z;
 
     // Avoid division by zero
@@ -28,8 +26,7 @@ MELON_INLINE static vec3f normalize(const vec3f& v) noexcept
     );
 }
 
-MELON_INLINE static vec3f cross(const vec3f& a, const vec3f& b) noexcept
-{
+MELON_INLINE static vec3f cross(const vec3f& a, const vec3f& b) noexcept {
     return vec3f(
         a.y * b.z - a.z * b.y,
         a.z * b.x - a.x * b.z,
@@ -37,12 +34,8 @@ MELON_INLINE static vec3f cross(const vec3f& a, const vec3f& b) noexcept
     );
 }
 
-MELON_INLINE static float dot(const vec3f& a, const vec3f& b) noexcept
-{
+MELON_INLINE static float dot(const vec3f& a, const vec3f& b) noexcept {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 #endif // MELON_MATH_UTIL_H
-
-
-

@@ -1,6 +1,11 @@
 #pragma once
 #include <cstdint>
+#include "vk_renderer.h"
+#include "arena_memory.h"
 
+#define USE_RUST_RENDERER
+
+#if defined(USE_RUST_RENDERER)
 struct RendererContext;
 
 extern "C" {
@@ -8,24 +13,32 @@ extern "C" {
     void renderer_draw(RendererContext* context);
     void renderer_terminate(RendererContext* context);
 }
+#endif
 
 class Renderer {
 public:
     Renderer(uint32_t width, uint32_t height);
     ~Renderer();
 
+#if defined(USE_RUST_RENDERER)
     Renderer(const Renderer&) = delete;
     Renderer& operator=(const Renderer&) = delete;
 
     Renderer(Renderer&& other) noexcept;
     Renderer& operator=(Renderer&& other) noexcept;
+#endif
 
-    void init(void* glfwWindowHandle);
+    bool init(void* glfwWindowHandle);
     void draw();
     void terminate();
 
 private:
+
+#if defined(USE_RUST_RENDERER)
     RendererContext* _context = nullptr;
+#else
+    VkRenderer* _vk_renderer = nullptr;
+#endif
     uint32_t _width = 0;
     uint32_t _height = 0;
 };

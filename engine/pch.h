@@ -1,6 +1,8 @@
 #ifndef MELONENGINE_PCH_H
 #define MELONENGINE_PCH_H
 
+#include <windows.h >
+
 // STL
 #include <vector>
 #include <algorithm>

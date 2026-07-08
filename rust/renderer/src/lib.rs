@@ -42,7 +42,7 @@ pub unsafe extern "C" fn renderer_init(
     let instance = match create_vulkan_instance(&entry) {
         Ok(i) => i,
         Err(_) => return std::ptr::null_mut(),
-    };x
+    };
 
     let surface_loader = surface::Instance::new(&entry, &instance);
     let win32_loader = win32_surface::Instance::new(&entry, &instance);
@@ -184,4 +184,3 @@ fn create_logical_device(instance: &Instance) -> Result<(Device, vk::Queue), ()>
         Ok((device, graphics_queue))
     }
 }
-

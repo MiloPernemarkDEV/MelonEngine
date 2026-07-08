@@ -1,6 +1,7 @@
 #ifndef MELON_ARENA_MEMORY_H
 #define MELON_ARENA_MEMORY_H
 
+#include "defines.h"
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
@@ -42,5 +43,6 @@ private:
     char* buffer;
 };
 
+inline Arena g_GlobalArena{ 400_MB };
 
 #endif // MELON_ARENA_MEMORY_H

@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main() {
-    Arena globalMemory(400 * 1024 * 1024);
+    Arena globalMemory(400_MB);
     Arena* arenaPtr = &globalMemory;
     auto* app = globalMemory.add<Application>(arenaPtr);
 

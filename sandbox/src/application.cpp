@@ -3,7 +3,7 @@
 Application::Application(Arena* globalArena)
     : persistentArena(globalArena)
 {
-    platformWindow = persistentArena->add<PlatformWindow>();
+    platformWindow = persistentArena->add<PlatformGlfw>();
 }
 
 bool Application::init() {

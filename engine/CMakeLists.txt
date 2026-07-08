@@ -17,6 +17,8 @@ target_include_directories(imgui PUBLIC
         ${CMAKE_SOURCE_DIR}/engine/platform/public
         ${CMAKE_SOURCE_DIR}/engine/core/public
         ${CMAKE_SOURCE_DIR}/engine/math/public
+        ${CMAKE_SOURCE_DIR}/engine/renderer/public
+        platform/win32/public
 )
 
 target_link_libraries(imgui PUBLIC
@@ -28,6 +30,15 @@ add_library(Engine STATIC
         core/private/platform_window.cpp
         core/private/arena_memory.cpp
         core/private/renderer.cpp
+        core/public/file_system.h
+        core/public/arena_memory.h
+        core/public/logger.h
+        core/public/renderer.h
+        core/private/file_system.cpp
+        renderer/public/vk_ctx.h
+        renderer/public/vk_instance.h
+        renderer/public/vk_renderer.h
+        renderer/private/vk_renderer.cpp
 )
 
 target_sources(Engine PRIVATE
