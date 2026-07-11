@@ -27,18 +27,31 @@ target_link_libraries(imgui PUBLIC
 
 add_library(Engine STATIC
         pch.h
+
+        # Core Private
         core/private/platform_window.cpp
         core/private/arena_memory.cpp
         core/private/renderer.cpp
-        core/public/file_system.h
+        core/private/file_util.cpp
+        core/private/job_system.cpp
+        core/Private/string_util.cpp
+
+        # Core Public
+        core/public/file_util.h
         core/public/arena_memory.h
         core/public/logger.h
         core/public/renderer.h
-        core/private/file_system.cpp
+        core/public/job_system.h
+        core/public/string_util.h
+
+        # Renderer Public
         renderer/public/vk_ctx.h
         renderer/public/vk_instance.h
         renderer/public/vk_renderer.h
+
+        # Renderer Private
         renderer/private/vk_renderer.cpp
+        renderer/private/vk_instance.cpp
 )
 
 target_sources(Engine PRIVATE
