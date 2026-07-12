@@ -5,6 +5,16 @@
 #include <iostream>
 
 int main() {
+    File::FileOp file;
+    if (file.open("NewFile.txt")) {
+        file.write_str("THIS IS SOME STRING TO CHECK IF THE FILE SIZE FUNCTIONS WORK!");
+
+        constexpr std::size_t maxSize{0_MB};
+        if (file.size() > maxSize) {
+            ME_LOG(Warning, "File size is too big, {} bytes", file.size());
+        }
+    }
+
     Arena globalMemory(400_MB);
     Arena* arenaPtr = &globalMemory;
     auto* app = globalMemory.add<Application>(arenaPtr);
@@ -12,7 +22,6 @@ int main() {
     if (!app->init()) {
         return EXIT_FAILURE;
     }
-
     try {
         app->Run();
     }

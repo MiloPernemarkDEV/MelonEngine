@@ -4,11 +4,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include "types.h"
+
 std::string StringUtil::wide_to_utf8(const std::wstring& wide) {
     if (wide.empty()) {
         return {};
     }
-    int size = WideCharToMultiByte(
+    const s32 size = WideCharToMultiByte(
         CP_UTF8,
         0,
         wide.c_str(),
@@ -41,7 +43,7 @@ std::wstring StringUtil::utf8_to_wide(const std::string& utf8)
         return {};
     }
 
-    int size = MultiByteToWideChar(
+    const s32 size = MultiByteToWideChar(
         CP_UTF8,
         0,
         utf8.c_str(),

@@ -85,6 +85,14 @@ void File::FileOp::trunc(const std::string& filename) {
     }
 }
 
+s64 File::FileOp::size() const {
+    LARGE_INTEGER fileSize;
+    const BOOL result = GetFileSizeEx(file, &fileSize);
+
+    return (result == FALSE) ? 0 : fileSize.QuadPart;
+}
+
+
 DWORD File::FileOp::ToCreationDisposition(const EFileOpType opType) {
     DWORD creationDisp{};
 
