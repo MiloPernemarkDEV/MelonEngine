@@ -45,6 +45,7 @@ add_library(Engine STATIC
         core/public/job_system.h
         core/public/string_util.h
         core/Public/time.h
+        core/public/bsp_tree.h
 
         # Renderer Public
         renderer/public/vk_ctx.h
@@ -54,7 +55,6 @@ add_library(Engine STATIC
         # Renderer Private
         renderer/private/vk_renderer.cpp
         renderer/private/vk_instance.cpp
-
 )
 
 target_sources(Engine PRIVATE
