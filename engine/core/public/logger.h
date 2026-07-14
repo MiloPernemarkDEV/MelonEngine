@@ -10,17 +10,16 @@
 
 enum LogLevel { Info, Warning, Error };
 
-// Fixed ODR violation by making these constexpr
-inline constexpr const char *LOG_COLOR_RED = "\033[31m";
-inline constexpr const char *LOG_COLOR_YELLOW = "\033[33m";
-inline constexpr const char *LOG_COLOR_CYAN = "\033[36m";
-inline constexpr const char *LOG_COLOR_RESET = "\033[0m";
+inline constexpr auto *LOG_COLOR_RED = "\033[31m";
+inline constexpr auto *LOG_COLOR_YELLOW = "\033[33m";
+inline constexpr auto *LOG_COLOR_CYAN = "\033[36m";
+inline constexpr auto *LOG_COLOR_RESET = "\033[0m";
 
 class Logger {
 public:
     template<typename... Args>
-    static void Log(LogLevel level, std::string_view fmt, Args &&... args) {
-        std::string msg = std::vformat(fmt, std::make_format_args(args...));
+    static void Log(const LogLevel level, const std::string_view fmt, Args &&... args) {
+        const std::string msg = std::vformat(fmt, std::make_format_args(args...));
 
         const char *log_color{nullptr};
         const char *level_str{nullptr};

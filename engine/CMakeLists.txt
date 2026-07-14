@@ -29,12 +29,13 @@ add_library(Engine STATIC
         pch.h
 
         # Core Private
-        core/private/platform_window.cpp
+        core/private/platform.cpp
         core/private/arena_memory.cpp
         core/private/renderer.cpp
         core/private/file_util.cpp
         core/private/job_system.cpp
         core/Private/string_util.cpp
+        core/Private/time.cpp
 
         # Core Public
         core/public/file_util.h
@@ -43,6 +44,7 @@ add_library(Engine STATIC
         core/public/renderer.h
         core/public/job_system.h
         core/public/string_util.h
+        core/Public/time.h
 
         # Renderer Public
         renderer/public/vk_ctx.h
@@ -52,6 +54,7 @@ add_library(Engine STATIC
         # Renderer Private
         renderer/private/vk_renderer.cpp
         renderer/private/vk_instance.cpp
+
 )
 
 target_sources(Engine PRIVATE
@@ -65,6 +68,7 @@ target_include_directories(Engine PUBLIC
         ${CMAKE_SOURCE_DIR}/Vendor/assimp/include
         ${vma_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/
+        ${CMAKE_SOURCE_DIR}/Vendor/include
 )
 
 target_link_directories(Engine PUBLIC
@@ -74,7 +78,6 @@ target_link_directories(Engine PUBLIC
 
 target_link_libraries(Engine PUBLIC
         Vulkan::Vulkan
-        glad
         glfw
         assimp
         vk-bootstrap::vk-bootstrap

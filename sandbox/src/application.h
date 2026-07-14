@@ -12,8 +12,8 @@ public:
     void terminate();
 private:
     Arena* persistentArena = nullptr;
-    PlatformGlfw* platformWindow;
-    Renderer* renderer;
+    Renderer* renderer = nullptr;
+    Platform* platform = nullptr;
 };
 
 

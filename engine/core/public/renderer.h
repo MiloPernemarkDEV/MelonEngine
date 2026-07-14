@@ -3,7 +3,7 @@
 #include "vk_renderer.h"
 #include "arena_memory.h"
 
-#define USE_RUST_RENDERER
+// #define USE_RUST_RENDERER
 
 #if defined(USE_RUST_RENDERER)
 struct RendererContext;

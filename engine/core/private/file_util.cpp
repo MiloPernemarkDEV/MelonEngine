@@ -4,7 +4,7 @@
 
 constexpr size_t FILE_LOCAL_BUFFER_SIZE = 128;
 
-#ifdef WIN32
+#ifdef _WIN32
 
 File::FileOp::~FileOp() {
     if (file != INVALID_HANDLE_VALUE) {

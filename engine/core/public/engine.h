@@ -3,9 +3,10 @@
 
 #include "arena_memory.h"
 #include "logger.h"
-#include "platform_window.h"
+#include "platform.h"
 #include "renderer.h"
 #include "types.h"
 #include "defines.h"
+#include "time.h"
 
 #endif

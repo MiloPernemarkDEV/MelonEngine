@@ -3,32 +3,34 @@
 Application::Application(Arena* globalArena)
     : persistentArena(globalArena)
 {
-    platformWindow = persistentArena->add<PlatformGlfw>();
+    platform = persistentArena->add<Platform>();
+    renderer = persistentArena->add<Renderer>(platform->WIDTH(), platform->HEIGHT());
 }
 
 bool Application::init() {
-    if (!platformWindow->init()) { return false; }
+    if (!platform->init() ) {
+        return false;
+    }
 
-    renderer = persistentArena->add<Renderer>(platformWindow->WINDOW_X, platformWindow->WINDOW_Y);
-    renderer->init(platformWindow->window);
-
+    if (!renderer->init(platform->HANDLE()) ) {
+        return false;
+    }
 
     return true;
 }
 
 void Application::Run() {
 
-    while (!platformWindow->window_should_close()) {
-        platformWindow->poll_for_events();
+    while (!Platform::window_should_close()) {
+        Time::update();
+        Platform::poll_for_events();
 
         renderer->draw();
-
-        platformWindow->swap_buffers();
     }
 }
 
 void Application::terminate() {
     renderer->terminate();
-    platformWindow->terminate();
+    platform->terminate();
 }
 

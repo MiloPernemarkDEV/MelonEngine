@@ -1,7 +1,7 @@
 #ifndef MELON_FILE_SYSTEM_H
 #define MELON_FILE_SYSTEM_H
 
-#ifdef WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include "types.h"
@@ -39,6 +39,6 @@ namespace File {
         static std::string get_working();
     };
 }
-#endif // WIN32
+#endif // _WIN32
 
 #endif // MELON_FILE_SYSTEM_H
