@@ -7,6 +7,8 @@
 #include <wrl/client.h>
 #include "string_util.h"
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 Platform::Platform()
     : window_title("MelonEngine"),
       window_height(1480),
@@ -109,6 +111,11 @@ std::vector<const char*> Platform::get_vk_extensions() {
 }
 
 LRESULT CALLBACK Platform::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+    if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam)) {
+        return true;
+    }
+
     switch (uMsg) {
         case WM_CLOSE:
             bWindowShouldClose = true;

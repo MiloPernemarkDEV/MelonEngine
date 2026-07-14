@@ -36,6 +36,7 @@ add_library(Engine STATIC
         core/private/job_system.cpp
         core/Private/string_util.cpp
         core/Private/time.cpp
+        core/private/melon_gui.cpp
 
         # Core Public
         core/public/file_util.h
@@ -46,9 +47,10 @@ add_library(Engine STATIC
         core/public/string_util.h
         core/Public/time.h
         core/public/bsp_tree.h
+        core/public/melon_gui.h
+
 
         # Renderer Public
-        renderer/public/vk_ctx.h
         renderer/public/vk_instance.h
         renderer/public/vk_renderer.h
 
