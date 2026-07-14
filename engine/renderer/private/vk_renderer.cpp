@@ -5,7 +5,7 @@
 
 bool VkRenderer::init() {
 
-    vkContext.instance = InstanceBuilder::create_instance("MelonEngine", VK_MAKE_API_VERSION(0, 1, 3, 0));
+    vkContext.instance = InstanceFactory::create_instance("MelonEngine", VK_MAKE_API_VERSION(0, 1, 3, 0));
     guiInitInfo.Instance = vkContext.instance;
 
     return true;

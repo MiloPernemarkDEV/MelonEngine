@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.h>
 
-namespace InstanceBuilder {
+namespace InstanceFactory {
 	VkInstance create_instance(const char* engineName, uint32_t api_version);
 }
 

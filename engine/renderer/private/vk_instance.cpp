@@ -4,7 +4,7 @@
 #include "types.h"
 #include "logger.h"
 
-VkInstanceBuilder::VkInstanceBuilder(const char* engineName, uint32_t api_version) {
+VkInstance InstanceFactory::create_instance(const char* engineName, uint32_t api_version) {
     VkApplicationInfo appInfo = {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.apiVersion = api_version;
@@ -49,5 +49,7 @@ VkInstanceBuilder::VkInstanceBuilder(const char* engineName, uint32_t api_versio
     info.ppEnabledLayerNames = enabledLayers.data();
     info.enabledLayerCount = static_cast<uint32_t>(enabledLayers.size());
 
-    vkCreateInstance(&info, nullptr, &m_instance);
+    VkInstance instance = VK_NULL_HANDLE;
+    vkCreateInstance(&info, nullptr, &instance);
+    return instance;
 }
