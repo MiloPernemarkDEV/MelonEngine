@@ -6,7 +6,7 @@
 
 #include "types.h"
 
-std::string StringUtil::wide_to_utf8(const std::wstring& wide) {
+std::string StringUtil::wide_to_multibyte(const std::wstring& wide) {
     if (wide.empty()) {
         return {};
     }

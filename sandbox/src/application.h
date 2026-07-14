@@ -14,6 +14,8 @@ private:
     Arena* persistentArena = nullptr;
     Renderer* renderer = nullptr;
     Platform* platform = nullptr;
+
+    void showcase_features();
 };
 
 

@@ -3,6 +3,9 @@
 #ifdef _WIN32
 #include "logger.h"
 #include <vulkan/vulkan_win32.h>
+#include <shobjidl.h>
+#include <wrl/client.h>
+#include "string_util.h"
 
 Platform::Platform()
     : window_title("MelonEngine"),
@@ -49,6 +52,7 @@ bool Platform::window_should_close() {
 }
 
 void Platform::terminate() {
+    ME_LOG(Info, "Terminating platform layer");
 }
 
 void Platform::poll_for_events() {
@@ -59,7 +63,42 @@ void Platform::poll_for_events() {
     }
 }
 
-std::vector<const char*> Platform::EXTENSIONS() const {
+std::string Platform::file_open_dialog() {
+    // WIN32 COM initialization
+    HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (FAILED(hr)) {
+        ME_LOG(Error, "Failed to initialize COM");
+        return {};
+    }
+
+    Microsoft::WRL::ComPtr<IFileOpenDialog> pFileOpen;
+    Microsoft::WRL::ComPtr<IShellItem> pItem;
+    std::string resultPath{""};
+
+    // Get file open dialog COM object from os factory
+    hr = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&pFileOpen));
+
+    if (FAILED(hr)) {
+        CoUninitialize();
+        ME_LOG(Error, "Failed to get FIleOpenDialog COM object from the operating system");
+        return {};
+    }
+
+    if (SUCCEEDED(pFileOpen->Show(nullptr))) {
+        if (SUCCEEDED(pFileOpen->GetResult(&pItem))) {
+            PWSTR pszFilePath = nullptr;
+
+            if (SUCCEEDED(pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath))) {
+                resultPath = StringUtil::wide_to_multibyte(pszFilePath);
+                CoTaskMemFree(pszFilePath);
+            }
+        }
+    }
+    CoUninitialize();
+    return resultPath;
+}
+
+std::vector<const char*> Platform::get_vk_extensions() {
 
     return {
         VK_KHR_SURFACE_EXTENSION_NAME,

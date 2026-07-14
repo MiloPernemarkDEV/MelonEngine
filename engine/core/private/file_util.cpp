@@ -26,7 +26,7 @@ bool File::FileOp::open(const std::string& filename, const EFileOpType opType) {
         nullptr
     );
     if (file == INVALID_HANDLE_VALUE) {
-        ME_LOG(Error, "Failed to open file {0}", StringUtil::wide_to_utf8(wideFilename));
+        ME_LOG(Error, "Failed to open file {0}", StringUtil::wide_to_multibyte(wideFilename));
         return false;
     }
     return true;
@@ -81,7 +81,7 @@ void File::FileOp::trunc(const std::string& filename) {
     );
 
     if (file == INVALID_HANDLE_VALUE) {
-        ME_LOG(Error, "Failed to open file {0}", StringUtil::wide_to_utf8(wideFilename));
+        ME_LOG(Error, "Failed to open file {0}", StringUtil::wide_to_multibyte(wideFilename));
     }
 }
 
@@ -129,7 +129,7 @@ std::string File::DirOp::get_working() {
     }
 
     path.resize(written);
-    return StringUtil::wide_to_utf8(path);
+    return StringUtil::wide_to_multibyte(path);
 }
 
 #endif

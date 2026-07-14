@@ -20,7 +20,6 @@ bool Application::init() {
 }
 
 void Application::Run() {
-
     while (!Platform::window_should_close()) {
         Time::update();
         Platform::poll_for_events();
