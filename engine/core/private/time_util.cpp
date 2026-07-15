@@ -1,9 +1,9 @@
-#include "time.h"
+#include "time_util.h"
 
 #ifdef _WIN32
 #include <windows.h>
 
-namespace Time {
+namespace TimeUtil {
     u64 stamp() {
         LARGE_INTEGER val;
         const BOOL ret = QueryPerformanceCounter(&val);

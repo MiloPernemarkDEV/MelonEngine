@@ -8,7 +8,12 @@ add_library(imgui STATIC
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/imgui_demo.cpp
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends/imgui_impl_vulkan.cpp
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends/imgui_impl_glfw.cpp
+        ${CMAKE_SOURCE_DIR}/Vendor/imgui/backends/imgui_impl_win32.cpp
 )
+
+if(WIN32)
+        target_compile_definitions(imgui PUBLIC IMGUI_IMPL_WIN32_API)
+endif()
 
 target_include_directories(imgui PUBLIC
         ${CMAKE_SOURCE_DIR}/Vendor/imgui/
@@ -35,8 +40,8 @@ add_library(Engine STATIC
         core/private/file_util.cpp
         core/private/job_system.cpp
         core/Private/string_util.cpp
-        core/Private/time.cpp
         core/private/melon_gui.cpp
+        core/private/time_util.cpp
 
         # Core Public
         core/public/file_util.h
@@ -45,18 +50,20 @@ add_library(Engine STATIC
         core/public/renderer.h
         core/public/job_system.h
         core/public/string_util.h
-        core/Public/time.h
         core/public/bsp_tree.h
         core/public/melon_gui.h
+        core/public/time_util.h
 
 
         # Renderer Public
         renderer/public/vk_instance.h
         renderer/public/vk_renderer.h
+        renderer/public/vk_device.h
 
         # Renderer Private
         renderer/private/vk_renderer.cpp
         renderer/private/vk_instance.cpp
+        renderer/private/vk_device.cpp
 )
 
 target_sources(Engine PRIVATE

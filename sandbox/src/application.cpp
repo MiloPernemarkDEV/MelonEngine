@@ -21,7 +21,7 @@ bool Application::init() {
 
 void Application::Run() {
     while (!Platform::window_should_close()) {
-        Time::update();
+        TimeUtil::update();
         Platform::poll_for_events();
 
         renderer->draw();

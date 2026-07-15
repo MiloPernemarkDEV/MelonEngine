@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-namespace Time {
+namespace TimeUtil {
     u64 stamp();
     u64 stamp_freq();
     u64 tick_ms();

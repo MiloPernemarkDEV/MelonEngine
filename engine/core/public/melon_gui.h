@@ -12,7 +12,7 @@ struct GuiInitInfo {
     uint32_t                        DescriptorPoolSize; // Might be handled internally by imgui
     uint32_t                        MinImageCount;
     uint32_t                        ImageCount;
-    VkPipelineCache                 PipelineCache; // Optional
+    VkPipelineCache                 PipelineCache;
 };
 
 #ifdef _WIN32

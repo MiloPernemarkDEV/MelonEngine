@@ -1,10 +1,37 @@
 #include "vk_instance.h"
-
 #include "platform.h"
 #include "types.h"
 #include "logger.h"
+#include <iostream>
 
-VkInstance InstanceFactory::create_instance(const char* engineName, uint32_t api_version) {
+#ifdef NDEBUG
+inline bool enableValidationLayers = false;
+#else
+inline bool enableValidationLayers = true;
+#endif
+
+static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) {
+
+    if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+        std::cerr << "[Vulkan Validation]: " << pCallbackData->pMessage << std::endl;
+    }
+
+    return VK_FALSE;
+}
+
+void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& info) {
+    info = {};
+    info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+    info.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    info.pfnUserCallback = debugCallback;
+}
+
+VkInstance InstanceManager::create(const char* engineName, uint32_t api_version) {
     VkApplicationInfo appInfo = {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.apiVersion = api_version;
@@ -23,19 +50,18 @@ VkInstance InstanceFactory::create_instance(const char* engineName, uint32_t api
     };
 
     std::vector<const char*> enabledLayers;
-    for (const char* targetName : targetLayers) {
-        bool found = false;
-        for (const auto& layerProperties : availableLayers) {
-            if (strcmp(targetName, layerProperties.layerName) == 0) {
-                found = true;
-                break;
+    if (enableValidationLayers) {
+        for (const char* targetName : targetLayers) {
+            bool found = false;
+            for (const auto& layerProperties : availableLayers) {
+                if (strcmp(targetName, layerProperties.layerName) == 0) {
+                    found = true;
+                    break;
+                }
             }
-        }
-        if (found) {
-            enabledLayers.push_back(targetName);
-        } else {
-            // Optional: Log a warning using your logger if a target layer is missing
-            // ME_LOG(Warning, "Requested layer not found: %s", targetName);
+            if (found) {
+                enabledLayers.push_back(targetName);
+            }
         }
     }
 
@@ -49,7 +75,43 @@ VkInstance InstanceFactory::create_instance(const char* engineName, uint32_t api
     info.ppEnabledLayerNames = enabledLayers.data();
     info.enabledLayerCount = static_cast<uint32_t>(enabledLayers.size());
 
+    VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
+    if (enableValidationLayers) {
+        populateDebugMessengerCreateInfo(debugCreateInfo);
+        info.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
+    } else {
+        info.pNext = nullptr;
+    }
+
     VkInstance instance = VK_NULL_HANDLE;
-    vkCreateInstance(&info, nullptr, &instance);
+    if (vkCreateInstance(&info, nullptr, &instance) != VK_SUCCESS) {
+        return VK_NULL_HANDLE;
+    }
+
     return instance;
+}
+
+void InstanceManager::destroy(VkInstance instance) {
+    vkDestroyInstance(instance, nullptr);
+}
+
+void InstanceManager::create_validation_layers(VkInstance instance, VkDebugUtilsMessengerEXT& debugMessenger) {
+    if (!enableValidationLayers) return;
+
+    VkDebugUtilsMessengerCreateInfoEXT info;
+    populateDebugMessengerCreateInfo(info);
+
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        func(instance, &info, nullptr, &debugMessenger);
+    }
+}
+
+void InstanceManager::destroy_validation_layers(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger) {
+    if (!enableValidationLayers || debugMessenger == VK_NULL_HANDLE) return;
+
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        func(instance, debugMessenger, nullptr);
+    }
 }

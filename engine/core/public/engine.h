@@ -7,7 +7,7 @@
 #include "renderer.h"
 #include "types.h"
 #include "defines.h"
-#include "time.h"
+#include "time_util.h"
 #include "file_util.h"
 
 #endif

@@ -35,7 +35,7 @@ namespace MelonGUI {
         vk_info.DescriptorPoolSize = guiInitInfo->DescriptorPoolSize; // Might be handled internally by imgui
         vk_info.MinImageCount = guiInitInfo->MinImageCount;
         vk_info.ImageCount = guiInitInfo->ImageCount;
-        vk_info.PipelineCache = guiInitInfo->PipelineCache; // Optional
+        vk_info.PipelineCache = guiInitInfo->PipelineCache;
 
         ImGui_ImplVulkan_Init(&vk_info);
     }
