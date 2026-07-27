@@ -20,4 +20,4 @@ public:
 private:
 };
 
-#endif MELON_APP_ICON_H
+#endif // MELON_APP_ICON_H

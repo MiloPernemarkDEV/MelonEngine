@@ -1,9 +1,11 @@
 #pragma once
 #include <cstdint>
+
+//#define USE_RUST_RENDERER
+#if !defined(USE_RUST_RENDERER)
 #include "vk_renderer.h"
 #include "arena_memory.h"
-
-// #define USE_RUST_RENDERER
+#endif
 
 #if defined(USE_RUST_RENDERER)
 struct RendererContext;
@@ -28,7 +30,7 @@ public:
     Renderer& operator=(Renderer&& other) noexcept;
 #endif
 
-    bool init(void* glfwWindowHandle);
+    bool init(void* windowHandle);
     void draw();
     void terminate();
 

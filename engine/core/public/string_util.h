@@ -1,12 +1,11 @@
-#ifndef MELON_STRING_UTIL_H
-#define MELON_STRING_UTIL_H
+#pragma once
 
 #include <string>
 
 class StringUtil {
 public:
-    static std::string wide_to_multibyte(const std::wstring& wide);
-    static std::wstring utf8_to_wide(const std::string& utf8);
+    static std::string wide_to_multibyte(const std::wstring &wide);
+
+    static std::wstring utf8_to_wide(const std::string &utf8);
 };
 
-#endif // MELON_STRING_UTIL_H

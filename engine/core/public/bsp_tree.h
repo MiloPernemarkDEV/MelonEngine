@@ -1,5 +1,4 @@
-#ifndef MELON_BSP_TREE_H
-#define MELON_BSP_TREE_H
+#pragma once
 
 #include <functional>
 #include "types.h"
@@ -26,5 +25,3 @@ struct BspNode {
         }
     }
 };
-
-#endif // MELON_BSP_TREE_H

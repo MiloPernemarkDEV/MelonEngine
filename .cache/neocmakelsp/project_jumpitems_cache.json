@@ -1,0 +1,141 @@
+{
+  "date": "2026-07-27T11:01:26.042226+02:00",
+  "data": {
+    "ASSIMP_BUILD_ASSIMP_TOOLS": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 35,
+            "character": 4
+          },
+          "end": {
+            "line": 35,
+            "character": 29
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "IMGUI_DIR": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 0,
+            "character": 4
+          },
+          "end": {
+            "line": 0,
+            "character": 13
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "CMAKE_CXX_STANDARD": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 3,
+            "character": 4
+          },
+          "end": {
+            "line": 3,
+            "character": 22
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "ASSIMP_BUILD_TESTS": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 36,
+            "character": 4
+          },
+          "end": {
+            "line": 36,
+            "character": 22
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "ASSIMP_INSTALL": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 37,
+            "character": 4
+          },
+          "end": {
+            "line": 37,
+            "character": 18
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "CMAKE_CXX_STANDARD_REQUIRED": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 4,
+            "character": 4
+          },
+          "end": {
+            "line": 4,
+            "character": 31
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "FETCHCONTENT_QUIET": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 6,
+            "character": 4
+          },
+          "end": {
+            "line": 6,
+            "character": 22
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    },
+    "ASSIMP_WARNINGS_AS_ERRORS": {
+      "location": {
+        "uri": "file:///C:/dev/melon_engine/CMakeLists.txt",
+        "range": {
+          "start": {
+            "line": 38,
+            "character": 4
+          },
+          "end": {
+            "line": 38,
+            "character": 29
+          }
+        }
+      },
+      "document_info": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt",
+      "is_function": false
+    }
+  }
+}

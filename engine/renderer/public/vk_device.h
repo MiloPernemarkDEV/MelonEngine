@@ -2,9 +2,6 @@
 #define MELON_VK_DEVICE_H
 
 #include <vulkan/vulkan.h>
-#include "types.h"
-#include <type_traits>
-#include <vector>
 
 namespace DeviceManager {
     VkPhysicalDevice get_physical_device(VkInstance instance, VkQueueFlags required_queues);

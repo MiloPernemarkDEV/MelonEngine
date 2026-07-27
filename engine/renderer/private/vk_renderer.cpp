@@ -7,14 +7,17 @@
 bool VkRenderer::init() {
 
     vkContext.instance = InstanceManager::create("MelonEngine", MELON_VULKAN_API_VERSION);
+    if (vkContext.instance == VK_NULL_HANDLE) { return false; }
     InstanceManager::create_validation_layers(vkContext.instance, debugMessenger);
     guiInitInfo.Instance = vkContext.instance;
     guiInitInfo.ApiVersion = MELON_VULKAN_API_VERSION;
 
     vkContext.physicalDevice = DeviceManager::get_physical_device(vkContext.instance, VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT);
+    if (vkContext.physicalDevice == VK_NULL_HANDLE) { return false; }
     guiInitInfo.PhysicalDevice = vkContext.physicalDevice;
 
     vkContext.device = DeviceManager::create_device(vkContext.physicalDevice);
+    if (vkContext.device == VK_NULL_HANDLE) { return false; }
     guiInitInfo.Device = vkContext.device;
 
     return true;

@@ -36,13 +36,13 @@ Renderer& Renderer::operator=(Renderer&& other) noexcept {
     return *this;
 }
 
-bool Renderer::init(void* glfwWindowHandle) {
-    if (!glfwWindowHandle) {
-        ME_LOG(Error, "Cannot initialize renderer: Provided GLFW window handle is null.");
+bool Renderer::init(void* windowHandle) {
+    if (!windowHandle) {
+        ME_LOG(Error, "Cannot initialize renderer: Provided window handle is null.");
         return false;
     }
 
-    GLFWwindow* window = static_cast<GLFWwindow*>(glfwWindowHandle);
+    GLFWwindow* window = static_cast<GLFWwindow*>(windowHandle);
 
     void* hwnd = glfwGetWin32Window(window);
     void* hinstance = GetModuleHandle(nullptr); // Standard Win32 call to get the active process module instance
@@ -104,4 +104,3 @@ void Renderer::terminate() {
     _vk_renderer->terminate();
 }
 #endif
-

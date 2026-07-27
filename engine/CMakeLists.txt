@@ -39,7 +39,7 @@ add_library(Engine STATIC
         core/private/renderer.cpp
         core/private/file_util.cpp
         core/private/job_system.cpp
-        core/Private/string_util.cpp
+        core/private/string_util.cpp
         core/private/melon_gui.cpp
         core/private/time_util.cpp
 
@@ -59,11 +59,13 @@ add_library(Engine STATIC
         renderer/public/vk_instance.h
         renderer/public/vk_renderer.h
         renderer/public/vk_device.h
+        renderer/public/vk_swapchain.h
 
         # Renderer Private
         renderer/private/vk_renderer.cpp
         renderer/private/vk_instance.cpp
         renderer/private/vk_device.cpp
+        renderer/private/vk_swapchain.cpp
 )
 
 target_sources(Engine PRIVATE
@@ -87,11 +89,7 @@ target_link_directories(Engine PUBLIC
 
 target_link_libraries(Engine PUBLIC
         Vulkan::Vulkan
-        glfw
-        assimp
-        vk-bootstrap::vk-bootstrap
         imgui
-        fastgltf::fastgltf
         renderer
 )
 

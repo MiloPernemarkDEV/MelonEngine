@@ -1,4 +1,5 @@
 #include "time_util.h"
+#include "logger.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -42,8 +43,16 @@ namespace TimeUtil {
     {
         return delta_time;
     }
+    void get_system_clock(SysClock& time){
+        SYSTEMTIME systime{};
+        GetSystemTime(&systime);
+        time.hour = static_cast<s32>(systime.wHour);
+        time.minute = static_cast<s32>(systime.wMinute);
+        time.second = static_cast<s32>(systime.wSecond);
+        time.day = static_cast<s32>(systime.wDay);
+        time.month = static_cast<s32>(systime.wMonth);
+        time.year = static_cast<s32>(systime.wYear);
+    }
 }
 
 #endif // _WIN32
-
-

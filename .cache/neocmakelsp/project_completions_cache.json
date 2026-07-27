@@ -1,0 +1,89 @@
+{
+  "date": "2026-07-27T11:01:26.041358200+02:00",
+  "data": {
+    "C:\\dev\\melon_engine\\CMakeLists.txt": [
+      {
+        "label": "CMAKE_CXX_STANDARD",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "CMAKE_CXX_STANDARD_REQUIRED",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "FETCHCONTENT_QUIET",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "Vulkan_LIBRARIES",
+        "kind": 6,
+        "detail": "Variable",
+        "documentation": "package: Vulkan"
+      },
+      {
+        "label": "Vulkan_INCLUDE_DIRS",
+        "kind": 6,
+        "detail": "Variable",
+        "documentation": "package: Vulkan"
+      },
+      {
+        "label": "ASSIMP_BUILD_ASSIMP_TOOLS",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "ASSIMP_BUILD_TESTS",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "ASSIMP_INSTALL",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "ASSIMP_WARNINGS_AS_ERRORS",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\CMakeLists.txt"
+      },
+      {
+        "label": "Vulkan_LIBRARIES",
+        "kind": 6,
+        "detail": "Variable",
+        "documentation": "package: Vulkan"
+      },
+      {
+        "label": "Vulkan_INCLUDE_DIRS",
+        "kind": 6,
+        "detail": "Variable",
+        "documentation": "package: Vulkan"
+      }
+    ],
+    "C:\\dev\\melon_engine\\Engine\\CMakeLists.txt": [
+      {
+        "label": "IMGUI_DIR",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\Engine\\CMakeLists.txt"
+      }
+    ],
+    "C:\\dev\\melon_engine\\engine\\CMakeLists.txt": [
+      {
+        "label": "IMGUI_DIR",
+        "kind": 12,
+        "detail": "Value",
+        "documentation": "defined variable\nfrom: C:\\dev\\melon_engine\\engine\\CMakeLists.txt"
+      }
+    ]
+  }
+}

@@ -6,7 +6,7 @@
 
 #include "types.h"
 
-std::string StringUtil::wide_to_multibyte(const std::wstring& wide) {
+std::string StringUtil::wide_to_multibyte(const std::wstring &wide) {
     if (wide.empty()) {
         return {};
     }
@@ -36,10 +36,8 @@ std::string StringUtil::wide_to_multibyte(const std::wstring& wide) {
     return utf8;
 }
 
-std::wstring StringUtil::utf8_to_wide(const std::string& utf8)
-{
-    if (utf8.empty())
-    {
+std::wstring StringUtil::utf8_to_wide(const std::string &utf8) {
+    if (utf8.empty()) {
         return {};
     }
 
@@ -66,4 +64,14 @@ std::wstring StringUtil::utf8_to_wide(const std::string& utf8)
     return wide;
 }
 
-#endif
+#elif defined(__linux__)
+
+std::string StringUtil::wide_to_multibyte(const std::wstring &wide) {
+
+}
+
+std::wstring StringUtil::utf8_to_wide(const std::string &utf8) {
+
+}
+
+#endif // _WIN32
